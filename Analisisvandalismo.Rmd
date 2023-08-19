@@ -1,0 +1,219 @@
+--- 
+title: "Análisis de Vandalismos a la Flota del SITM MIO en Cali: Importancia y Justificación"
+author: "Oscar Morán - Karol Mejía"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+github-repo: rstudio/bookdown-demo
+description: "En este libro, exploraremos en detalle la base de datos que recopila información sobre los incidentes de vandalismo que han afectado al Sistema Integrado de Transporte Masivo (SITM) conocido como MIO. El MIO es un sistema de transporte público que opera en la ciudad de Cali, Colombia, y ha sido objeto de diversos actos de vandalismo a lo largo del tiempo. The output format for this example is bookdown::gitbook."
+---
+
+# Descripción data Vandalismo flota SITM MIO
+
+---
+title: "Análisis de Vandalismos a la Flota del SITM MIO en Cali: Importancia y Justificación"
+author: "Karol Mejía - Oscar Morán"
+date: "21/08/2023"
+output: html_document
+---
+
+## Introducción
+
+<p style="text-align: justify;"> El presente documento tiene como objetivo analizar la base de datos histórica de vandalismos a la flota del Sistema Integrado de Transporte Masivo (SITM) MIO en la ciudad de Cali, Colombia. La información ha sido suministrada internamente por Metro Cali, lo que garantiza el acceso a datos confiables y autorizados para su análisis. </p>
+
+## Justificación
+
+<p style="text-align: justify;"> El estudio de la base de datos histórica de vandalismos a la flota del SITM MIO reviste gran importancia por diversas razones:</p>
+
+1. <p style="text-align: justify;"> **Impacto en el Transporte Público:** El vandalismo a los autobuses y estaciones del MIO puede ocasionar daños significativos, generando costos operativos adicionales para el sistema. Este análisis nos permitirá comprender la magnitud del problema y cuantificar su impacto en el transporte público de la ciudad.
+</p>
+
+2. **Seguridad Ciudadana:** Los actos de vandalismo también pueden afectar la seguridad de los usuarios y trabajadores del transporte público. Al analizar los datos, podremos identificar áreas y momentos de mayor riesgo, lo que facilitará la implementación de estrategias de prevención y protección.
+
+3. **Toma de Decisiones:** Contar con información sólida sobre los incidentes de vandalismo permitirá a las autoridades y a Metro Cali tomar decisiones informadas y eficientes para mejorar la protección de la flota y reducir los daños.
+
+4. **Detección de Patrones y Tendencias:** Mediante técnicas de análisis de datos, podremos identificar patrones y tendencias en los actos de vandalismo. Esto puede ser útil para anticipar futuros incidentes y diseñar políticas de prevención más efectivas.
+
+5. **Mejora del Servicio:** Al entender mejor la naturaleza de los vandalismos, se pueden implementar estrategias para minimizar los tiempos de inactividad de la flota y mejorar la calidad del servicio ofrecido a los usuarios.</p>
+
+## Fuentes y Permisos de Uso
+
+<p style="text-align: justify;"> La información utilizada en este análisis proviene de la base de datos suministrada internamente por Metro Cali. Se ha obtenido el permiso explícito para utilizar estos datos con fines analíticos y académicos, garantizando la confidencialidad y protección de la información sensible.</p>
+
+# Estructura de los datos en series de tiempo
+
+<p style="text-align: justify;"> La estructura de los datos en series de tiempo es fundamental para el análisis y modelado adecuados de los patrones temporales en los datos. Los datos de serie de tiempo son observaciones registradas en momentos específicos a lo largo del tiempo.</p>
+
+<p style="text-align: justify;"> En el presente cápitulo abordaremos el análisis de la información contenida en la base de datos de vandalismos suministrada por el ente gestor del sistema de transporte masivo MIO, con el fin de verificar en primera instancia los valores contenidos, información relevante y estructura del dataset.</p>
+
+<p style="text-align: justify;"> La estructura de los datos en series de tiempo se basa en la secuencia temporal de observaciones de una variable específica. Entender esta estructura es esencial para aplicar técnicas de análisis y modelado de series de tiempo de manera efectiva.</p>
+
+
+
+```{r setup, include=FALSE, echo=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(dplyr)
+library(knitr)
+library(ggplot2)
+library(readxl)
+library(lubridate)
+library(fpp2)
+library(zoo)
+library(TTR)
+library(tseries)
+```
+
+<p style="text-align: justify;"> Comenzamos el proceso al acceder a la base de datos de vandalismos, que  contiene información correspondiente de vandalismos a la flota del SITM MIO de los años 2021 y 2022.</p>
+
+```{r, warning=FALSE}
+vandalismo <- read_excel("vandalismo.xlsx")
+
+```
+
+## Aproximación en promedio Móvil
+
+<p style="text-align: justify;"> En el análisis de series temporales, el método de medias móviles tiene variadas aplicaciones, así, este método puede sernos útil si queremos calcular la tendencia de la serie temporal sin tener que ajustarnos a una función previa, ofreciendo así una visión suavizada de una serie, ya que promediando varios valores se elimina parte de los movimientos irregulares de la serie; también puede servirnos para realizar predicciones cuando la tendencia de la serie tiene una media constante.</p>
+
+<p style="text-align: justify;"> Permite observar y resaltar tendencias subyacentes o patrones cíclicos al calcular el promedio de un conjunto de valores en un intervalo móvil de tiempo, por lo que esta técnica es especialmente útil para eliminar el ruido y las fluctuaciones aleatorias en los datos, lo que puede hacer que los patrones temporales sean más visibles.</p>
+
+<p style="text-align: justify;"> A continuación, se presenta el proceso de estructuración de la secuencia del conjunto de datos con el objetivo de identificar las fechas relevantes y determinar la columna base necesaria para la posterior creación de una gráfica de serie, en el fragmento de código en lenguaje R que sigue, se ilustra cómo se lleva a cabo esta tarea:</p>
+
+```{r}
+Fecha <- seq(as.Date("2021-01-01"), as.Date("2022-10-26"), by = "days", each = 1) 
+datos_sumados <- aggregate(Calificación ~ Fecha, data = vandalismo, sum)
+```
+<p style="text-align: justify;"> En este fragmento, se procede a generar una secuencia de fechas de acuerdo a la información revisada incialmente al llamar el dataset, abarca desde enero de 2021 hasta octubre de 2022 con una frecuencia diaria.</p>
+
+<p style="text-align: justify;"> Se plantea a continuación como objetivo proporcionar una visualización gráfica de los datos en bruto contenidos en el conjunto de datos,esto se realiza para obtener una representación visual que permita identificar patrones y tendencias en las variables involucradas.</p>
+
+```{r, fig.width=20, fig.height=5}
+grafico <- ggplot(datos_sumados, aes(x = Fecha, y = Calificación)) +
+  geom_line() +    # Línea para conectar los puntos
+  geom_point() +   # Puntos en cada fecha
+  labs(x = "Fecha", y = "Número de Casos", title = "Casos de Vandalismo por Fecha") +
+  theme_bw()
+print(grafico)
+```
+
+<p style="text-align: justify;"> Procederemos a calcular el promedio móvil de la columna "Calificación" en un intervalo específico dentro del período desde enero de 2021 hasta octubre de 2022.</p>
+
+
+```{r}
+# Función de promedio móvil en un intervalo
+promedio_movil <- function(datos_sumados, Calificación, intervalo) {
+  datos_sumados %>%
+    mutate(promedio = rollmean(Calificación, intervalo, fill = NA))
+}
+```
+<p style="text-align: justify;"> La función rollmean() se aplica a la columna "Calificación" con el intervalo especificado, calculando así el promedio móvil.</p>
+
+```{r}
+# Calcular promedio móvil con intervalo de 7 días
+data_con_promedio <- promedio_movil(datos_sumados, "Calificación", 7)
+knitr::kable(head(data_con_promedio, 50), caption = "Base de Datos Vandalismos FLOTA")
+#data_con_promedio
+```
+
+
+<p style="text-align: justify;"> A continuación, se presenta el proceso de creación de la visualización en gráfica que incorpora tanto los valores originales de una columna como su respectivo promedio móvil, esta representación permite observar de manera efectiva cómo fluctúan los datos en relación con su tendencia promedio en un intervalo de tiempo de 7 días.</p> 
+
+```{r, fig.width=20, fig.height=5, warning=FALSE}
+# Gráfico de Aproximación en Promedio Móvil
+ggplot() +
+  geom_line(data = datos_sumados, aes(x = Fecha, y = Calificación), color = "blue", linetype = "solid") +
+  geom_line(data = data_con_promedio, aes(x = Fecha, y = promedio), color = "red", linetype = "dashed") +
+  labs(title = "Aproximación en Promedio Móvil", x = "Fecha", y = "Valor") +
+  theme_minimal()
+```
+
+
+<p style="text-align: justify;"> A continuación se presenta una función esencial en el análisis de series temporales, enfocada en calcular los rezagos de una variable en un conjunto de datos, en el ámbito del análisis de series temporales, el cálculo de rezagos desempeña un papel crucial para comprender las relaciones entre observaciones pasadas y presentes en una secuencia temporal.</p>
+
+```{r}
+# Calculo de los rezagos
+calcular_rezagos <- function(datos_sumados, Calificación, pasos) {
+  datos_sumados %>%
+    mutate(across(.cols = Calificación, .fns = list(lag = ~lag(., pasos)), .names = "{col}_lag{pasos}"))
+}
+```
+<p style="text-align: justify;"> Se inicia calculando los rezagos de 7 días en la columna "Calificación" del conjunto de datos "datos_sumados", posteriormente se calculan los rezagos de 7 días en la columna "Calificación_lag7", que ya contiene los rezagos de 7 días calculados en la etapa anterior; esto permite obtener los rezagos de 14 días.</p>
+
+<p style="text-align: justify;"> Esta estrategia de calcular rezagos en etapas sucesivas es útil para analizar efectos a más largo plazo en la serie temporal.</p>
+
+
+```{r}
+# Calcular rezagos de 7 y 14 días 
+data_con_rezagos <- calcular_rezagos(datos_sumados, "Calificación", 7)
+data_con_rezagos <- calcular_rezagos(data_con_rezagos, "Calificación_lag7", 7)
+```
+
+```{r}
+names(data_con_rezagos)
+```
+<p style="text-align: justify;"> Se procede a realizar un gráfico que permite comparar los valores originales de una serie temporal con los rezagos de 7 días correspondientes. </p>
+
+```{r, fig.width=10, fig.height=5, warning=FALSE}
+ggplot(data_con_rezagos, aes(x = Fecha)) +
+  geom_line(aes(y = Calificación, color = "black")) +
+  geom_line(aes(y = Calificación_lag7, color = "red")) +
+  labs(title = "Gráfico de Rezagos",
+       y = "Calificación",
+       color = "Leyenda") +
+  scale_color_manual(values = c("Valor original" = "black",
+                                "Rezago 7 días" = "red")) +
+  theme_minimal()
+```
+
+<p style="text-align: justify;"> Procedemos crear un gráfico consolidado que permite comparar visualmente múltiples aspectos:</p>
+
+<p style="text-align: justify;"> 1. Con "geom_line", se agregan varias capas de líneas al gráfico:</p>
+<p style="text-align: justify;"> -La primera línea representa los valores originales de la columna "Calificación" en color azul y con línea sólida.</p>
+<p style="text-align: justify;"> -La segunda línea representa los valores del promedio móvil en color rojo y con línea punteada.</p>
+<p style="text-align: justify;"> -Las dos siguientes líneas representan los valores originales y los rezagos de 7 días en color verde y naranja, respectivamente,ambas con línea punteada de una serie temporal a lo largo del tiempo.</p>
+
+```{r, fig.width=10, fig.height=5, warning=FALSE}
+# Graficar los resultados
+ggplot() +
+  geom_line(data = datos_sumados, aes(x = Fecha, y = Calificación), color = "blue", linetype = "solid") +
+  geom_line(data = data_con_promedio, aes(x = Fecha, y = promedio), color = "red", linetype = "dashed") +
+  geom_line(data = data_con_rezagos, aes(x = Fecha, y = Calificación), color = "green", linetype = "dotted") +
+  geom_line(data = data_con_rezagos, aes(x = Fecha, y = Calificación_lag7), color = "orange", linetype = "dotted") +
+  labs(title = "Análisis de Variable en el Tiempo", x = "Fecha", y = "Calificación") +
+  theme_minimal()
+```
+
+# Preprocesamiento y visualización
+
+<p style="text-align: justify;"> A continuación se realizará un proceso determinante que nos permitirá definir y explicar los componentes fundamentales que componen nuestra serie a lo largo del tiempo, al separar la serie en sus partes constituyentes, como la tendencia, la estacionalidad y el componente residual, se comprende mejor los patrones y las variaciones presentes.</p>
+
+```{r}
+# Realizar descomposición de la serie de tiempo
+serie_de_tiempo <- ts(datos_sumados$Calificación, frequency = 240)
+descomposicion <- decompose(serie_de_tiempo)
+```
+
+```{r}
+# Gráfico de la descomposición
+plot(descomposicion)
+```
+
+<p style="text-align: justify;"> Se procede a realizar una verificación muy necesaria para el análisis de nuestra serie de tiempo: la estacionalidadm  usaremos la biblioteca "tseries" y su prueba de Dickey-Fuller aumentada (ADF) para determinar si nuestra serie de tiempo cumple con este requisito.</p>
+
+```{r, warning=FALSE}
+# Verificar estacionalidad
+adf_test <- adf.test(datos_sumados$Calificación)
+print(adf_test)
+ 
+```
+<p style="text-align: justify;"> El valor p (0.01 en este caso) es menor que el nivel comúnmente utilizado de 0.05, lo que indica que se rechaza la hipótesis nula. La hipótesis nula en este caso es que la serie de tiempo tiene una raíz unitaria y no es "estacionaria", dado que el valor p es pequeño, se puede concluir que hay suficiente evidencia estadística para decir que la serie de tiempo es estacionaria en función de los resultados de la prueba ADF, gracias a la estacionariedad de la serie, evitaremos la necesidad de realizar diferenciación en este caso particular.</p>
+
+
+
+

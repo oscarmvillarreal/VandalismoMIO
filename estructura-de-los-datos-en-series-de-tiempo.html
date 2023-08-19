@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>2 Estructura de los datos en series de tiempo | Análisis de Vandalismos a la Flota del SITM MIO en Cali: Importancia y Justificación</title>
+  <meta name="description" content="En este libro, exploraremos en detalle la base de datos que recopila información sobre los incidentes de vandalismo que han afectado al Sistema Integrado de Transporte Masivo (SITM) conocido como MIO. El MIO es un sistema de transporte público que opera en la ciudad de Cali, Colombia, y ha sido objeto de diversos actos de vandalismo a lo largo del tiempo. The output format for this example is bookdown::gitbook." />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="2 Estructura de los datos en series de tiempo | Análisis de Vandalismos a la Flota del SITM MIO en Cali: Importancia y Justificación" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="En este libro, exploraremos en detalle la base de datos que recopila información sobre los incidentes de vandalismo que han afectado al Sistema Integrado de Transporte Masivo (SITM) conocido como MIO. El MIO es un sistema de transporte público que opera en la ciudad de Cali, Colombia, y ha sido objeto de diversos actos de vandalismo a lo largo del tiempo. The output format for this example is bookdown::gitbook." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="2 Estructura de los datos en series de tiempo | Análisis de Vandalismos a la Flota del SITM MIO en Cali: Importancia y Justificación" />
+  
+  <meta name="twitter:description" content="En este libro, exploraremos en detalle la base de datos que recopila información sobre los incidentes de vandalismo que han afectado al Sistema Integrado de Transporte Masivo (SITM) conocido como MIO. El MIO es un sistema de transporte público que opera en la ciudad de Cali, Colombia, y ha sido objeto de diversos actos de vandalismo a lo largo del tiempo. The output format for this example is bookdown::gitbook." />
+  
+
+<meta name="author" content="Karol Mejía - Oscar Morán" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="descripción-data-vandalismo-flota-sitm-mio.html"/>
+<link rel="next" href="preprocesamiento-y-visualización.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="descripción-data-vandalismo-flota-sitm-mio.html"><a href="descripción-data-vandalismo-flota-sitm-mio.html"><i class="fa fa-check"></i><b>1</b> Descripción data Vandalismo flota SITM MIO</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="descripción-data-vandalismo-flota-sitm-mio.html"><a href="descripción-data-vandalismo-flota-sitm-mio.html#introducción"><i class="fa fa-check"></i><b>1.1</b> Introducción</a></li>
+<li class="chapter" data-level="1.2" data-path="descripción-data-vandalismo-flota-sitm-mio.html"><a href="descripción-data-vandalismo-flota-sitm-mio.html#justificación"><i class="fa fa-check"></i><b>1.2</b> Justificación</a></li>
+<li class="chapter" data-level="1.3" data-path="descripción-data-vandalismo-flota-sitm-mio.html"><a href="descripción-data-vandalismo-flota-sitm-mio.html#fuentes-y-permisos-de-uso"><i class="fa fa-check"></i><b>1.3</b> Fuentes y Permisos de Uso</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="estructura-de-los-datos-en-series-de-tiempo.html"><a href="estructura-de-los-datos-en-series-de-tiempo.html"><i class="fa fa-check"></i><b>2</b> Estructura de los datos en series de tiempo</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="estructura-de-los-datos-en-series-de-tiempo.html"><a href="estructura-de-los-datos-en-series-de-tiempo.html#aproximación-en-promedio-móvil"><i class="fa fa-check"></i><b>2.1</b> Aproximación en promedio Móvil</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="preprocesamiento-y-visualización.html"><a href="preprocesamiento-y-visualización.html"><i class="fa fa-check"></i><b>3</b> Preprocesamiento y visualización</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Análisis de Vandalismos a la Flota del SITM MIO en Cali: Importancia y Justificación</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="estructura-de-los-datos-en-series-de-tiempo" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">2</span> Estructura de los datos en series de tiempo<a href="estructura-de-los-datos-en-series-de-tiempo.html#estructura-de-los-datos-en-series-de-tiempo" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p style="text-align: justify;">
+La estructura de los datos en series de tiempo es fundamental para el análisis y modelado adecuados de los patrones temporales en los datos. Los datos de serie de tiempo son observaciones registradas en momentos específicos a lo largo del tiempo.
+</p>
+<p style="text-align: justify;">
+En el presente cápitulo abordaremos el análisis de la información contenida en la base de datos de vandalismos suministrada por el ente gestor del sistema de transporte masivo MIO, con el fin de verificar en primera instancia los valores contenidos, información relevante y estructura del dataset.
+</p>
+<p style="text-align: justify;">
+La estructura de los datos en series de tiempo se basa en la secuencia temporal de observaciones de una variable específica. Entender esta estructura es esencial para aplicar técnicas de análisis y modelado de series de tiempo de manera efectiva.
+</p>
+<p style="text-align: justify;">
+Comenzamos el proceso al acceder a la base de datos de vandalismos, que contiene información correspondiente de vandalismos a la flota del SITM MIO de los años 2021 y 2022.
+</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb1-1" aria-hidden="true" tabindex="-1"></a>vandalismo <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;vandalismo.xlsx&quot;</span>)</span></code></pre></div>
+<div id="aproximación-en-promedio-móvil" class="section level2 hasAnchor" number="2.1">
+<h2><span class="header-section-number">2.1</span> Aproximación en promedio Móvil<a href="estructura-de-los-datos-en-series-de-tiempo.html#aproximación-en-promedio-móvil" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p style="text-align: justify;">
+En el análisis de series temporales, el método de medias móviles tiene variadas aplicaciones, así, este método puede sernos útil si queremos calcular la tendencia de la serie temporal sin tener que ajustarnos a una función previa, ofreciendo así una visión suavizada de una serie, ya que promediando varios valores se elimina parte de los movimientos irregulares de la serie; también puede servirnos para realizar predicciones cuando la tendencia de la serie tiene una media constante.
+</p>
+<p style="text-align: justify;">
+Permite observar y resaltar tendencias subyacentes o patrones cíclicos al calcular el promedio de un conjunto de valores en un intervalo móvil de tiempo, por lo que esta técnica es especialmente útil para eliminar el ruido y las fluctuaciones aleatorias en los datos, lo que puede hacer que los patrones temporales sean más visibles.
+</p>
+<p style="text-align: justify;">
+A continuación, se presenta el proceso de estructuración de la secuencia del conjunto de datos con el objetivo de identificar las fechas relevantes y determinar la columna base necesaria para la posterior creación de una gráfica de serie, en el fragmento de código en lenguaje R que sigue, se ilustra cómo se lleva a cabo esta tarea:
+</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb2-1" aria-hidden="true" tabindex="-1"></a>Fecha <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">as.Date</span>(<span class="st">&quot;2021-01-01&quot;</span>), <span class="fu">as.Date</span>(<span class="st">&quot;2022-10-26&quot;</span>), <span class="at">by =</span> <span class="st">&quot;days&quot;</span>, <span class="at">each =</span> <span class="dv">1</span>) </span>
+<span id="cb2-2"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb2-2" aria-hidden="true" tabindex="-1"></a>datos_sumados <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(Calificación <span class="sc">~</span> Fecha, <span class="at">data =</span> vandalismo, sum)</span></code></pre></div>
+<p style="text-align: justify;">
+En este fragmento, se procede a generar una secuencia de fechas de acuerdo a la información revisada incialmente al llamar el dataset, abarca desde enero de 2021 hasta octubre de 2022 con una frecuencia diaria.
+</p>
+<p style="text-align: justify;">
+Se plantea a continuación como objetivo proporcionar una visualización gráfica de los datos en bruto contenidos en el conjunto de datos,esto se realiza para obtener una representación visual que permita identificar patrones y tendencias en las variables involucradas.
+</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb3-1" aria-hidden="true" tabindex="-1"></a>grafico <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(datos_sumados, <span class="fu">aes</span>(<span class="at">x =</span> Fecha, <span class="at">y =</span> Calificación)) <span class="sc">+</span></span>
+<span id="cb3-2"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span>    <span class="co"># Línea para conectar los puntos</span></span>
+<span id="cb3-3"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span>   <span class="co"># Puntos en cada fecha</span></span>
+<span id="cb3-4"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Fecha&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Número de Casos&quot;</span>, <span class="at">title =</span> <span class="st">&quot;Casos de Vandalismo por Fecha&quot;</span>) <span class="sc">+</span></span>
+<span id="cb3-5"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
+<span id="cb3-6"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(grafico)</span></code></pre></div>
+<p><img src="Analisisvandalismo_files/figure-html/unnamed-chunk-4-1.png" width="1920" /></p>
+<p style="text-align: justify;">
+Procederemos a calcular el promedio móvil de la columna “Calificación” en un intervalo específico dentro del período desde enero de 2021 hasta octubre de 2022.
+</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Función de promedio móvil en un intervalo</span></span>
+<span id="cb4-2"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb4-2" aria-hidden="true" tabindex="-1"></a>promedio_movil <span class="ot">&lt;-</span> <span class="cf">function</span>(datos_sumados, Calificación, intervalo) {</span>
+<span id="cb4-3"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb4-3" aria-hidden="true" tabindex="-1"></a>  datos_sumados <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">promedio =</span> <span class="fu">rollmean</span>(Calificación, intervalo, <span class="at">fill =</span> <span class="cn">NA</span>))</span>
+<span id="cb4-5"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb4-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p style="text-align: justify;">
+La función rollmean() se aplica a la columna “Calificación” con el intervalo especificado, calculando así el promedio móvil.
+</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcular promedio móvil con intervalo de 7 días</span></span>
+<span id="cb5-2"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb5-2" aria-hidden="true" tabindex="-1"></a>data_con_promedio <span class="ot">&lt;-</span> <span class="fu">promedio_movil</span>(datos_sumados, <span class="st">&quot;Calificación&quot;</span>, <span class="dv">7</span>)</span>
+<span id="cb5-3"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb5-3" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">head</span>(data_con_promedio, <span class="dv">50</span>), <span class="at">caption =</span> <span class="st">&quot;Base de Datos Vandalismos FLOTA&quot;</span>)</span></code></pre></div>
+<table>
+<caption><span id="tab:unnamed-chunk-6">Table 2.1: </span>Base de Datos Vandalismos FLOTA</caption>
+<thead>
+<tr class="header">
+<th align="left">Fecha</th>
+<th align="right">Calificación</th>
+<th align="right">promedio</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2021-01-01</td>
+<td align="right">8</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">2021-01-02</td>
+<td align="right">1</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">2021-01-03</td>
+<td align="right">1</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">2021-01-04</td>
+<td align="right">4</td>
+<td align="right">3.857143</td>
+</tr>
+<tr class="odd">
+<td align="left">2021-01-05</td>
+<td align="right">5</td>
+<td align="right">3.714286</td>
+</tr>
+<tr class="even">
+<td align="left">2021-01-06</td>
+<td align="right">4</td>
+<td align="right">4.285714</td>
+</tr>
+<tr class="odd">
+<td align="left">2021-01-07</td>
+<td align="right">4</td>
+<td align="right">6.428571</td>
+</tr>
+<tr class="even">
+<td align="left">2021-01-08</td>
+<td align="right">7</td>
+<td align="right">6.285714</td>
+</tr>
+<tr class="odd">
+<td align="left">2021-01-09</td>
+<td align="right">5</td>
+<td align="right">6.714286</td>
+</tr>
+<tr class="even">
+<td align="left">2021-01-10</td>
+<td align="right">16</td>
+<td align="right">7.428571</td>
+</tr>
+<tr class="odd">
+<td align="left">2021-01-11</td>
+<td align="right">3</td>
+<td align="right">8.142857</td>
+</tr>
+<tr class="even">
+<td align="left">2021-01-12</td>
+<td align="right">8</td>
+<td align="right">8.000000</td>
+</tr>
+<tr class="odd">
+<td align="left">2021-01-13</td>
+<td align="right">9</td>
+<td align="right">8.000000</td>
+</tr>
+<tr class="even">
+<td align="left">2021-01-14</td>
+<td align="right">9</td>
+<td align="right">6.285714</td>
+</tr>
+<tr class="odd">
+<td align="left">2021-01-15</td>
+<td align="right">6</td>
+<td align="right">7.142857</td>
+</tr>
+<tr class="even">
+<td align="left">2021-01-16</td>
+<td align="right">5</td>
+<td align="right">7.142857</td>
+</tr>
+<tr class="odd">
+<td align="left">2021-01-17</td>
+<td align="right">4</td>
+<td align="right">7.142857</td>
+</tr>
+<tr class="even">
+<td align="left">2021-01-18</td>
+<td align="right">9</td>
+<td align="right">7.714286</td>
+</tr>
+<tr class="odd">
+<td align="left">2021-01-19</td>
+<td align="right">8</td>
+<td align="right">7.142857</td>
+</tr>
+<tr class="even">
+<td align="left">2021-01-20</td>
+<td align="right">9</td>
+<td align="right">7.285714</td>
+</tr>
+<tr class="odd">
+<td align="left">2021-01-21</td>
+<td align="right">13</td>
+<td align="right">7.428571</td>
+</tr>
+<tr class="even">
+<td align="left">2021-01-22</td>
+<td align="right">2</td>
+<td align="right">7.714286</td>
+</tr>
+<tr class="odd">
+<td align="left">2021-01-23</td>
+<td align="right">6</td>
+<td align="right">7.714286</td>
+</tr>
+<tr class="even">
+<td align="left">2021-01-24</td>
+<td align="right">5</td>
+<td align="right">8.428571</td>
+</tr>
+<tr class="odd">
+<td align="left">2021-01-25</td>
+<td align="right">11</td>
+<td align="right">7.857143</td>
+</tr>
+<tr class="even">
+<td align="left">2021-01-26</td>
+<td align="right">8</td>
+<td align="right">9.000000</td>
+</tr>
+<tr class="odd">
+<td align="left">2021-01-27</td>
+<td align="right">14</td>
+<td align="right">9.285714</td>
+</tr>
+<tr class="even">
+<td align="left">2021-01-28</td>
+<td align="right">9</td>
+<td align="right">9.142857</td>
+</tr>
+<tr class="odd">
+<td align="left">2021-01-29</td>
+<td align="right">10</td>
+<td align="right">9.571429</td>
+</tr>
+<tr class="even">
+<td align="left">2021-01-30</td>
+<td align="right">8</td>
+<td align="right">9.571429</td>
+</tr>
+<tr class="odd">
+<td align="left">2021-01-31</td>
+<td align="right">4</td>
+<td align="right">8.857143</td>
+</tr>
+<tr class="even">
+<td align="left">2021-02-01</td>
+<td align="right">14</td>
+<td align="right">9.428571</td>
+</tr>
+<tr class="odd">
+<td align="left">2021-02-02</td>
+<td align="right">8</td>
+<td align="right">9.571429</td>
+</tr>
+<tr class="even">
+<td align="left">2021-02-03</td>
+<td align="right">9</td>
+<td align="right">10.000000</td>
+</tr>
+<tr class="odd">
+<td align="left">2021-02-04</td>
+<td align="right">13</td>
+<td align="right">10.285714</td>
+</tr>
+<tr class="even">
+<td align="left">2021-02-05</td>
+<td align="right">11</td>
+<td align="right">9.857143</td>
+</tr>
+<tr class="odd">
+<td align="left">2021-02-06</td>
+<td align="right">11</td>
+<td align="right">10.571429</td>
+</tr>
+<tr class="even">
+<td align="left">2021-02-07</td>
+<td align="right">6</td>
+<td align="right">11.142857</td>
+</tr>
+<tr class="odd">
+<td align="left">2021-02-08</td>
+<td align="right">11</td>
+<td align="right">10.428571</td>
+</tr>
+<tr class="even">
+<td align="left">2021-02-09</td>
+<td align="right">13</td>
+<td align="right">10.714286</td>
+</tr>
+<tr class="odd">
+<td align="left">2021-02-10</td>
+<td align="right">13</td>
+<td align="right">10.000000</td>
+</tr>
+<tr class="even">
+<td align="left">2021-02-11</td>
+<td align="right">8</td>
+<td align="right">10.000000</td>
+</tr>
+<tr class="odd">
+<td align="left">2021-02-12</td>
+<td align="right">13</td>
+<td align="right">9.285714</td>
+</tr>
+<tr class="even">
+<td align="left">2021-02-13</td>
+<td align="right">6</td>
+<td align="right">8.285714</td>
+</tr>
+<tr class="odd">
+<td align="left">2021-02-14</td>
+<td align="right">6</td>
+<td align="right">8.000000</td>
+</tr>
+<tr class="even">
+<td align="left">2021-02-15</td>
+<td align="right">6</td>
+<td align="right">7.571429</td>
+</tr>
+<tr class="odd">
+<td align="left">2021-02-16</td>
+<td align="right">6</td>
+<td align="right">6.428571</td>
+</tr>
+<tr class="even">
+<td align="left">2021-02-17</td>
+<td align="right">11</td>
+<td align="right">6.571429</td>
+</tr>
+<tr class="odd">
+<td align="left">2021-02-18</td>
+<td align="right">5</td>
+<td align="right">6.142857</td>
+</tr>
+<tr class="even">
+<td align="left">2021-02-19</td>
+<td align="right">5</td>
+<td align="right">6.428571</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#data_con_promedio</span></span></code></pre></div>
+<p style="text-align: justify;">
+A continuación, se presenta el proceso de creación de la visualización en gráfica que incorpora tanto los valores originales de una columna como su respectivo promedio móvil, esta representación permite observar de manera efectiva cómo fluctúan los datos en relación con su tendencia promedio en un intervalo de tiempo de 7 días.
+</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfico de Aproximación en Promedio Móvil</span></span>
+<span id="cb7-2"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb7-3"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> datos_sumados, <span class="fu">aes</span>(<span class="at">x =</span> Fecha, <span class="at">y =</span> Calificación), <span class="at">color =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">linetype =</span> <span class="st">&quot;solid&quot;</span>) <span class="sc">+</span></span>
+<span id="cb7-4"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> data_con_promedio, <span class="fu">aes</span>(<span class="at">x =</span> Fecha, <span class="at">y =</span> promedio), <span class="at">color =</span> <span class="st">&quot;red&quot;</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Aproximación en Promedio Móvil&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Fecha&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Valor&quot;</span>) <span class="sc">+</span></span>
+<span id="cb7-6"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<p><img src="Analisisvandalismo_files/figure-html/unnamed-chunk-7-1.png" width="1920" /></p>
+<p style="text-align: justify;">
+A continuación se presenta una función esencial en el análisis de series temporales, enfocada en calcular los rezagos de una variable en un conjunto de datos, en el ámbito del análisis de series temporales, el cálculo de rezagos desempeña un papel crucial para comprender las relaciones entre observaciones pasadas y presentes en una secuencia temporal.
+</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculo de los rezagos</span></span>
+<span id="cb8-2"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb8-2" aria-hidden="true" tabindex="-1"></a>calcular_rezagos <span class="ot">&lt;-</span> <span class="cf">function</span>(datos_sumados, Calificación, pasos) {</span>
+<span id="cb8-3"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb8-3" aria-hidden="true" tabindex="-1"></a>  datos_sumados <span class="sc">%&gt;%</span></span>
+<span id="cb8-4"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="at">.cols =</span> Calificación, <span class="at">.fns =</span> <span class="fu">list</span>(<span class="at">lag =</span> <span class="sc">~</span><span class="fu">lag</span>(., pasos)), <span class="at">.names =</span> <span class="st">&quot;{col}_lag{pasos}&quot;</span>))</span>
+<span id="cb8-5"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb8-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p style="text-align: justify;">
+Se inicia calculando los rezagos de 7 días en la columna “Calificación” del conjunto de datos “datos_sumados”, posteriormente se calculan los rezagos de 7 días en la columna “Calificación_lag7”, que ya contiene los rezagos de 7 días calculados en la etapa anterior; esto permite obtener los rezagos de 14 días.
+</p>
+<p style="text-align: justify;">
+Esta estrategia de calcular rezagos en etapas sucesivas es útil para analizar efectos a más largo plazo en la serie temporal.
+</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcular rezagos de 7 y 14 días </span></span>
+<span id="cb9-2"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb9-2" aria-hidden="true" tabindex="-1"></a>data_con_rezagos <span class="ot">&lt;-</span> <span class="fu">calcular_rezagos</span>(datos_sumados, <span class="st">&quot;Calificación&quot;</span>, <span class="dv">7</span>)</span>
+<span id="cb9-3"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb9-3" aria-hidden="true" tabindex="-1"></a>data_con_rezagos <span class="ot">&lt;-</span> <span class="fu">calcular_rezagos</span>(data_con_rezagos, <span class="st">&quot;Calificación_lag7&quot;</span>, <span class="dv">7</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(data_con_rezagos)</span></code></pre></div>
+<pre><code>## [1] &quot;Fecha&quot;             &quot;Calificación&quot;      &quot;Calificación_lag7&quot;</code></pre>
+<p style="text-align: justify;">
+Se procede a realizar un gráfico que permite comparar los valores originales de una serie temporal con los rezagos de 7 días correspondientes.
+</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data_con_rezagos, <span class="fu">aes</span>(<span class="at">x =</span> Fecha)) <span class="sc">+</span></span>
+<span id="cb12-2"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> Calificación, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> Calificación_lag7, <span class="at">color =</span> <span class="st">&quot;red&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb12-4"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Gráfico de Rezagos&quot;</span>,</span>
+<span id="cb12-5"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb12-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Calificación&quot;</span>,</span>
+<span id="cb12-6"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb12-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">&quot;Leyenda&quot;</span>) <span class="sc">+</span></span>
+<span id="cb12-7"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;Valor original&quot;</span> <span class="ot">=</span> <span class="st">&quot;black&quot;</span>,</span>
+<span id="cb12-8"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb12-8" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;Rezago 7 días&quot;</span> <span class="ot">=</span> <span class="st">&quot;red&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb12-9"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<p><img src="Analisisvandalismo_files/figure-html/unnamed-chunk-11-1.png" width="960" /></p>
+<p style="text-align: justify;">
+Procedemos crear un gráfico consolidado que permite comparar visualmente múltiples aspectos:
+</p>
+<p style="text-align: justify;">
+<ol style="list-style-type: decimal">
+<li>Con “geom_line”, se agregan varias capas de líneas al gráfico:
+</p>
+<p style="text-align: justify;">
+-La primera línea representa los valores originales de la columna “Calificación” en color azul y con línea sólida.
+</p>
+<p style="text-align: justify;">
+-La segunda línea representa los valores del promedio móvil en color rojo y con línea punteada.
+</p>
+<p style="text-align: justify;">
+-Las dos siguientes líneas representan los valores originales y los rezagos de 7 días en color verde y naranja, respectivamente,ambas con línea punteada de una serie temporal a lo largo del tiempo.
+</p></li>
+</ol>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graficar los resultados</span></span>
+<span id="cb13-2"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb13-3"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> datos_sumados, <span class="fu">aes</span>(<span class="at">x =</span> Fecha, <span class="at">y =</span> Calificación), <span class="at">color =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">linetype =</span> <span class="st">&quot;solid&quot;</span>) <span class="sc">+</span></span>
+<span id="cb13-4"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> data_con_promedio, <span class="fu">aes</span>(<span class="at">x =</span> Fecha, <span class="at">y =</span> promedio), <span class="at">color =</span> <span class="st">&quot;red&quot;</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="sc">+</span></span>
+<span id="cb13-5"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> data_con_rezagos, <span class="fu">aes</span>(<span class="at">x =</span> Fecha, <span class="at">y =</span> Calificación), <span class="at">color =</span> <span class="st">&quot;green&quot;</span>, <span class="at">linetype =</span> <span class="st">&quot;dotted&quot;</span>) <span class="sc">+</span></span>
+<span id="cb13-6"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> data_con_rezagos, <span class="fu">aes</span>(<span class="at">x =</span> Fecha, <span class="at">y =</span> Calificación_lag7), <span class="at">color =</span> <span class="st">&quot;orange&quot;</span>, <span class="at">linetype =</span> <span class="st">&quot;dotted&quot;</span>) <span class="sc">+</span></span>
+<span id="cb13-7"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Análisis de Variable en el Tiempo&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Fecha&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Calificación&quot;</span>) <span class="sc">+</span></span>
+<span id="cb13-8"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<p><img src="Analisisvandalismo_files/figure-html/unnamed-chunk-12-1.png" width="960" /></p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="descripción-data-vandalismo-flota-sitm-mio.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="preprocesamiento-y-visualización.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/%s",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": false,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
