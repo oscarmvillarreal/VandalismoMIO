@@ -134,10 +134,12 @@ ggplot() +
 ```
 
 
-<p style="text-align: justify;"> A continuación se presenta una función esencial en el análisis de series temporales, enfocada en calcular los rezagos de una variable en un conjunto de datos, en el ámbito del análisis de series temporales, el cálculo de rezagos desempeña un papel crucial para comprender las relaciones entre observaciones pasadas y presentes en una secuencia temporal.</p>
+<p style="text-align: justify;"> A continuación se presenta una función esencial en el análisis de series temporales, enfocada en calcular los rezagos de una variable en un conjunto de datos, en el ámbito del análisis de series temporales, el cálculo de rezagos desempeña un papel crucial para comprender las relaciones entre observaciones pasadas y presentes en una secuencia temporal.</p>}
+
+## Calculo de los rezagos
 
 ```{r}
-# Calculo de los rezagos
+
 calcular_rezagos <- function(datos_sumados, Calificación, pasos) {
   datos_sumados %>%
     mutate(across(.cols = Calificación, .fns = list(lag = ~lag(., pasos)), .names = "{col}_lag{pasos}"))
@@ -178,6 +180,8 @@ ggplot(data_con_rezagos, aes(x = Fecha)) +
 <p style="text-align: justify;"> -La segunda línea representa los valores del promedio móvil en color rojo y con línea punteada.</p>
 <p style="text-align: justify;"> -Las dos siguientes líneas representan los valores originales y los rezagos de 7 días en color verde y naranja, respectivamente,ambas con línea punteada de una serie temporal a lo largo del tiempo.</p>
 
+## Graficar los resultados Promedio y Rezagos
+
 ```{r, fig.width=10, fig.height=5, warning=FALSE}
 # Graficar los resultados
 ggplot() +
@@ -189,15 +193,19 @@ ggplot() +
   theme_minimal()
 ```
 
+
 # Preprocesamiento y visualización
 
 <p style="text-align: justify;"> A continuación se realizará un proceso determinante que nos permitirá definir y explicar los componentes fundamentales que componen nuestra serie a lo largo del tiempo, al separar la serie en sus partes constituyentes, como la tendencia, la estacionalidad y el componente residual, se comprende mejor los patrones y las variaciones presentes.</p>
+
+## Descomposición de la serie de tiempo
 
 ```{r}
 # Realizar descomposición de la serie de tiempo
 serie_de_tiempo <- ts(datos_sumados$Calificación, frequency = 240)
 descomposicion <- decompose(serie_de_tiempo)
 ```
+
 
 ```{r}
 # Gráfico de la descomposición
@@ -206,6 +214,9 @@ plot(descomposicion)
 
 <p style="text-align: justify;"> Se procede a realizar una verificación muy necesaria para el análisis de nuestra serie de tiempo: la estacionalidadm  usaremos la biblioteca "tseries" y su prueba de Dickey-Fuller aumentada (ADF) para determinar si nuestra serie de tiempo cumple con este requisito.</p>
 
+## Verificación Estacionalidad
+
+
 ```{r, warning=FALSE}
 # Verificar estacionalidad
 adf_test <- adf.test(datos_sumados$Calificación)
@@ -213,6 +224,86 @@ print(adf_test)
  
 ```
 <p style="text-align: justify;"> El valor p (0.01 en este caso) es menor que el nivel comúnmente utilizado de 0.05, lo que indica que se rechaza la hipótesis nula. La hipótesis nula en este caso es que la serie de tiempo tiene una raíz unitaria y no es "estacionaria", dado que el valor p es pequeño, se puede concluir que hay suficiente evidencia estadística para decir que la serie de tiempo es estacionaria en función de los resultados de la prueba ADF, gracias a la estacionariedad de la serie, evitaremos la necesidad de realizar diferenciación en este caso particular.</p>
+
+
+# Modelado Serie Suavización Exponencial y Métodos
+
+<p style="text-align: justify;"> En este capítulo, se abordará el análisis y modelado de una serie de tiempo utilizando dos enfoques ampliamente utilizados: la suavización exponencial y el método de Holt-Winters.
+
+Estos métodos son herramientas valiosas en el campo del análisis de series temporales y permiten capturar y predecir patrones en los datos a lo largo del tiempo.</p>
+
+Examinemos el enfoque de modelado de esta serie temporal mediante una regresión lineal. 
+
+```{r, fig.width=10, fig.height=5, warning=FALSE}
+plot(serie_de_tiempo)
+abline(reg = lm(serie_de_tiempo ~ time(serie_de_tiempo)))
+
+```
+
+## Método Suavización Exponencial
+
+Aunque de acuerdo al criterio de la prueba prueba de Dickey-Fuller aumentada (ADF), la serie de tiempo es estacionaria y no muestra una tendencia o componente estacional, es posible que el método de Suavización Exponencial Simple no sea útil en este contexto
+
+
+```{r}
+# Aplicar suavizamiento exponencial simple
+modelo_suavizado <- HoltWinters(serie_de_tiempo, beta = FALSE, gamma = FALSE)
+modelo_suavizado
+
+```
+
+```{r}
+# Hacer pronósticos con suavizamiento exponencial simple
+pronosticos_suavizado <- forecast(modelo_suavizado, h = 30)  # Pronóstico para 30 días.
+pronosticos_suavizado
+```
+
+```{r, fig.width=10, fig.height=5, warning=FALSE}
+Suav_exp <- ses(serie_de_tiempo, h = 15)
+autoplot(Suav_exp) + autolayer(fitted(Suav_exp), series="Fitted")
+```
+
+
+<p style="text-align: justify;"> Después de aplicar el método de suavización exponencial a los datos, se llega a la conclusión de que este enfoque no logra capturar de manera efectiva una tendencia estacional presente en los datos, a pesar de tener la capacidad de detectar patrones a lo largo del tiempo, el método de suavización exponencial parece no ser adecuado para identificar y modelar la variabilidad estacional que puede influir en la serie temporal en consideración. La naturaleza de los datos parece no alinearse de manera óptima con las premisas y el enfoque del método de suavización exponencial en relación con la tendencia estacional, por lo tanto, es necesario explorar alternativas más apropiadas y específicas para abordar esta característica particular de la serie de tiempo.</p>
+
+
+## Metodología Holter-Winter y de suavizamiento 
+
+
+```{r}
+# Instalar y cargar el paquete de suavizamiento exponencial
+library(forecast)
+```
+
+```{r}
+# Crear una serie de tiempo con frecuencia diaria
+serie_tiempof <- ts(datos_sumados$Calificación, frequency = 2)
+```
+
+
+<p style="text-align: justify;"> La metodología Holt-Winters es un enfoque de pronóstico de series de tiempo que incorpora componentes de nivel, tendencia y estacionalidad para mejorar la precisión de las predicciones. Los tres componentes que considera son:
+</p>
+
+<p style="text-align: justify;"> - **Componente de nivel (nivel):** El nivel representa el valor medio de la serie de tiempo en un período dado. Se calcula utilizando el suavizamiento exponencial simple.
+</p>
+
+<p style="text-align: justify;"> - **Componente de tendencia (tendencia):** La tendencia se refiere a la dirección y magnitud del cambio en la serie de tiempo. Se calcula utilizando el suavizamiento exponencial doble.
+</p>
+
+<p style="text-align: justify;"> - **Componente estacional (estacionalidad):** La estacionalidad se refiere a las fluctuaciones regulares en la serie de tiempo debido a patrones estacionales. Se incorpora mediante el suavizamiento exponencial triple, que considera tanto la estacionalidad como la tendencia.
+</p>
+
+<p style="text-align: justify;"> La metodología Holt-Winters se adapta bien a series de tiempo que tienen tendencias y patrones estacionales. Esta técnica utiliza los valores históricos para calcular las estimaciones de los tres componentes y luego los combina para realizar pronósticos futuros.
+</p>
+
+```{r, fig.width=10, fig.height=5, warning=FALSE}
+mod1 <- HoltWinters(serie_tiempof, seasonal = "additive")
+plot(mod1)
+```
+
+
+<p style="text-align: justify;"> Al aplicar el Método Holt-Winters a nuestros datos de la serie temporal, podemos destacar observar patrones estacionales, a diferencia del enfoque de suavización exponencial, que no logró reflejar las variaciones estacionales, este Método Holt-Winters es efectivo en este sentido.  El Método Holt-Winters resulta ser una herramienta útil para abordar tendencias estacionales en series temporales, ofreciendo resultados sólidos y precisos en la modelación de estos patrones.
+</p>
 
 
 
