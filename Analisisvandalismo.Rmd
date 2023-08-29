@@ -194,7 +194,7 @@ ggplot() +
 ```
 
 
-# Preprocesamiento y visualización
+# Preprocesamiento y visualización  
 
 <p style="text-align: justify;"> A continuación se realizará un proceso determinante que nos permitirá definir y explicar los componentes fundamentales que componen nuestra serie a lo largo del tiempo, al separar la serie en sus partes constituyentes, como la tendencia, la estacionalidad y el componente residual, se comprende mejor los patrones y las variaciones presentes.</p>
 
