@@ -30,7 +30,7 @@
   
   
 <link rel="prev" href="estructura-de-los-datos-en-series-de-tiempo.html"/>
-
+<link rel="next" href="modelado-serie-suavización-exponencial-y-métodos.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -148,8 +148,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2" data-path="estructura-de-los-datos-en-series-de-tiempo.html"><a href="estructura-de-los-datos-en-series-de-tiempo.html"><i class="fa fa-check"></i><b>2</b> Estructura de los datos en series de tiempo</a>
 <ul>
 <li class="chapter" data-level="2.1" data-path="estructura-de-los-datos-en-series-de-tiempo.html"><a href="estructura-de-los-datos-en-series-de-tiempo.html#aproximación-en-promedio-móvil"><i class="fa fa-check"></i><b>2.1</b> Aproximación en promedio Móvil</a></li>
+<li class="chapter" data-level="2.2" data-path="estructura-de-los-datos-en-series-de-tiempo.html"><a href="estructura-de-los-datos-en-series-de-tiempo.html#calculo-de-los-rezagos"><i class="fa fa-check"></i><b>2.2</b> Calculo de los rezagos</a></li>
+<li class="chapter" data-level="2.3" data-path="estructura-de-los-datos-en-series-de-tiempo.html"><a href="estructura-de-los-datos-en-series-de-tiempo.html#graficar-los-resultados-promedio-y-rezagos"><i class="fa fa-check"></i><b>2.3</b> Graficar los resultados Promedio y Rezagos</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="preprocesamiento-y-visualización.html"><a href="preprocesamiento-y-visualización.html"><i class="fa fa-check"></i><b>3</b> Preprocesamiento y visualización</a></li>
+<li class="chapter" data-level="3" data-path="preprocesamiento-y-visualización.html"><a href="preprocesamiento-y-visualización.html"><i class="fa fa-check"></i><b>3</b> Preprocesamiento y visualización</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="preprocesamiento-y-visualización.html"><a href="preprocesamiento-y-visualización.html#descomposición-de-la-serie-de-tiempo"><i class="fa fa-check"></i><b>3.1</b> Descomposición de la serie de tiempo</a></li>
+<li class="chapter" data-level="3.2" data-path="preprocesamiento-y-visualización.html"><a href="preprocesamiento-y-visualización.html#verificación-estacionalidad"><i class="fa fa-check"></i><b>3.2</b> Verificación Estacionalidad</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="modelado-serie-suavización-exponencial-y-métodos.html"><a href="modelado-serie-suavización-exponencial-y-métodos.html"><i class="fa fa-check"></i><b>4</b> Modelado Serie Suavización Exponencial y Métodos</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="modelado-serie-suavización-exponencial-y-métodos.html"><a href="modelado-serie-suavización-exponencial-y-métodos.html#método-suavización-exponencial"><i class="fa fa-check"></i><b>4.1</b> Método Suavización Exponencial</a></li>
+<li class="chapter" data-level="4.2" data-path="modelado-serie-suavización-exponencial-y-métodos.html"><a href="modelado-serie-suavización-exponencial-y-métodos.html#metodología-holter-winter-y-de-suavizamiento"><i class="fa fa-check"></i><b>4.2</b> Metodología Holter-Winter y de suavizamiento</a></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -175,6 +186,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p style="text-align: justify;">
 A continuación se realizará un proceso determinante que nos permitirá definir y explicar los componentes fundamentales que componen nuestra serie a lo largo del tiempo, al separar la serie en sus partes constituyentes, como la tendencia, la estacionalidad y el componente residual, se comprende mejor los patrones y las variaciones presentes.
 </p>
+<div id="descomposición-de-la-serie-de-tiempo" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Descomposición de la serie de tiempo<a href="preprocesamiento-y-visualización.html#descomposición-de-la-serie-de-tiempo" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="preprocesamiento-y-visualización.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Realizar descomposición de la serie de tiempo</span></span>
 <span id="cb14-2"><a href="preprocesamiento-y-visualización.html#cb14-2" aria-hidden="true" tabindex="-1"></a>serie_de_tiempo <span class="ot">&lt;-</span> <span class="fu">ts</span>(datos_sumados<span class="sc">$</span>Calificación, <span class="at">frequency =</span> <span class="dv">240</span>)</span>
 <span id="cb14-3"><a href="preprocesamiento-y-visualización.html#cb14-3" aria-hidden="true" tabindex="-1"></a>descomposicion <span class="ot">&lt;-</span> <span class="fu">decompose</span>(serie_de_tiempo)</span></code></pre></div>
@@ -184,6 +197,9 @@ A continuación se realizará un proceso determinante que nos permitirá definir
 <p style="text-align: justify;">
 Se procede a realizar una verificación muy necesaria para el análisis de nuestra serie de tiempo: la estacionalidadm usaremos la biblioteca “tseries” y su prueba de Dickey-Fuller aumentada (ADF) para determinar si nuestra serie de tiempo cumple con este requisito.
 </p>
+</div>
+<div id="verificación-estacionalidad" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Verificación Estacionalidad<a href="preprocesamiento-y-visualización.html#verificación-estacionalidad" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="preprocesamiento-y-visualización.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Verificar estacionalidad</span></span>
 <span id="cb16-2"><a href="preprocesamiento-y-visualización.html#cb16-2" aria-hidden="true" tabindex="-1"></a>adf_test <span class="ot">&lt;-</span> <span class="fu">adf.test</span>(datos_sumados<span class="sc">$</span>Calificación)</span>
 <span id="cb16-3"><a href="preprocesamiento-y-visualización.html#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(adf_test)</span></code></pre></div>
@@ -197,13 +213,14 @@ Se procede a realizar una verificación muy necesaria para el análisis de nuest
 El valor p (0.01 en este caso) es menor que el nivel comúnmente utilizado de 0.05, lo que indica que se rechaza la hipótesis nula. La hipótesis nula en este caso es que la serie de tiempo tiene una raíz unitaria y no es “estacionaria”, dado que el valor p es pequeño, se puede concluir que hay suficiente evidencia estadística para decir que la serie de tiempo es estacionaria en función de los resultados de la prueba ADF, gracias a la estacionariedad de la serie, evitaremos la necesidad de realizar diferenciación en este caso particular.
 </p>
 </div>
+</div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="estructura-de-los-datos-en-series-de-tiempo.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="estructura-de-los-datos-en-series-de-tiempo.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="modelado-serie-suavización-exponencial-y-métodos.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

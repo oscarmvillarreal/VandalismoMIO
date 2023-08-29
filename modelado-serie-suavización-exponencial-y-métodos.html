@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>4 Modelado Serie Suavización Exponencial y Métodos | Análisis de Vandalismos a la Flota del SITM MIO en Cali: Importancia y Justificación</title>
+  <meta name="description" content="En este libro, exploraremos en detalle la base de datos que recopila información sobre los incidentes de vandalismo que han afectado al Sistema Integrado de Transporte Masivo (SITM) conocido como MIO. El MIO es un sistema de transporte público que opera en la ciudad de Cali, Colombia, y ha sido objeto de diversos actos de vandalismo a lo largo del tiempo. The output format for this example is bookdown::gitbook." />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="4 Modelado Serie Suavización Exponencial y Métodos | Análisis de Vandalismos a la Flota del SITM MIO en Cali: Importancia y Justificación" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="En este libro, exploraremos en detalle la base de datos que recopila información sobre los incidentes de vandalismo que han afectado al Sistema Integrado de Transporte Masivo (SITM) conocido como MIO. El MIO es un sistema de transporte público que opera en la ciudad de Cali, Colombia, y ha sido objeto de diversos actos de vandalismo a lo largo del tiempo. The output format for this example is bookdown::gitbook." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="4 Modelado Serie Suavización Exponencial y Métodos | Análisis de Vandalismos a la Flota del SITM MIO en Cali: Importancia y Justificación" />
+  
+  <meta name="twitter:description" content="En este libro, exploraremos en detalle la base de datos que recopila información sobre los incidentes de vandalismo que han afectado al Sistema Integrado de Transporte Masivo (SITM) conocido como MIO. El MIO es un sistema de transporte público que opera en la ciudad de Cali, Colombia, y ha sido objeto de diversos actos de vandalismo a lo largo del tiempo. The output format for this example is bookdown::gitbook." />
+  
+
+<meta name="author" content="Karol Mejía - Oscar Morán" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="preprocesamiento-y-visualización.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="descripción-data-vandalismo-flota-sitm-mio.html"><a href="descripción-data-vandalismo-flota-sitm-mio.html"><i class="fa fa-check"></i><b>1</b> Descripción data Vandalismo flota SITM MIO</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="descripción-data-vandalismo-flota-sitm-mio.html"><a href="descripción-data-vandalismo-flota-sitm-mio.html#introducción"><i class="fa fa-check"></i><b>1.1</b> Introducción</a></li>
+<li class="chapter" data-level="1.2" data-path="descripción-data-vandalismo-flota-sitm-mio.html"><a href="descripción-data-vandalismo-flota-sitm-mio.html#justificación"><i class="fa fa-check"></i><b>1.2</b> Justificación</a></li>
+<li class="chapter" data-level="1.3" data-path="descripción-data-vandalismo-flota-sitm-mio.html"><a href="descripción-data-vandalismo-flota-sitm-mio.html#fuentes-y-permisos-de-uso"><i class="fa fa-check"></i><b>1.3</b> Fuentes y Permisos de Uso</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="estructura-de-los-datos-en-series-de-tiempo.html"><a href="estructura-de-los-datos-en-series-de-tiempo.html"><i class="fa fa-check"></i><b>2</b> Estructura de los datos en series de tiempo</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="estructura-de-los-datos-en-series-de-tiempo.html"><a href="estructura-de-los-datos-en-series-de-tiempo.html#aproximación-en-promedio-móvil"><i class="fa fa-check"></i><b>2.1</b> Aproximación en promedio Móvil</a></li>
+<li class="chapter" data-level="2.2" data-path="estructura-de-los-datos-en-series-de-tiempo.html"><a href="estructura-de-los-datos-en-series-de-tiempo.html#calculo-de-los-rezagos"><i class="fa fa-check"></i><b>2.2</b> Calculo de los rezagos</a></li>
+<li class="chapter" data-level="2.3" data-path="estructura-de-los-datos-en-series-de-tiempo.html"><a href="estructura-de-los-datos-en-series-de-tiempo.html#graficar-los-resultados-promedio-y-rezagos"><i class="fa fa-check"></i><b>2.3</b> Graficar los resultados Promedio y Rezagos</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="preprocesamiento-y-visualización.html"><a href="preprocesamiento-y-visualización.html"><i class="fa fa-check"></i><b>3</b> Preprocesamiento y visualización</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="preprocesamiento-y-visualización.html"><a href="preprocesamiento-y-visualización.html#descomposición-de-la-serie-de-tiempo"><i class="fa fa-check"></i><b>3.1</b> Descomposición de la serie de tiempo</a></li>
+<li class="chapter" data-level="3.2" data-path="preprocesamiento-y-visualización.html"><a href="preprocesamiento-y-visualización.html#verificación-estacionalidad"><i class="fa fa-check"></i><b>3.2</b> Verificación Estacionalidad</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="modelado-serie-suavización-exponencial-y-métodos.html"><a href="modelado-serie-suavización-exponencial-y-métodos.html"><i class="fa fa-check"></i><b>4</b> Modelado Serie Suavización Exponencial y Métodos</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="modelado-serie-suavización-exponencial-y-métodos.html"><a href="modelado-serie-suavización-exponencial-y-métodos.html#método-suavización-exponencial"><i class="fa fa-check"></i><b>4.1</b> Método Suavización Exponencial</a></li>
+<li class="chapter" data-level="4.2" data-path="modelado-serie-suavización-exponencial-y-métodos.html"><a href="modelado-serie-suavización-exponencial-y-métodos.html#metodología-holter-winter-y-de-suavizamiento"><i class="fa fa-check"></i><b>4.2</b> Metodología Holter-Winter y de suavizamiento</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Análisis de Vandalismos a la Flota del SITM MIO en Cali: Importancia y Justificación</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="modelado-serie-suavización-exponencial-y-métodos" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">4</span> Modelado Serie Suavización Exponencial y Métodos<a href="modelado-serie-suavización-exponencial-y-métodos.html#modelado-serie-suavización-exponencial-y-métodos" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p style="text-align: justify;">
+<p>En este capítulo, se abordará el análisis y modelado de una serie de tiempo utilizando dos enfoques ampliamente utilizados: la suavización exponencial y el método de Holt-Winters.</p>
+Estos métodos son herramientas valiosas en el campo del análisis de series temporales y permiten capturar y predecir patrones en los datos a lo largo del tiempo.
+</p>
+<p>Examinemos el enfoque de modelado de esta serie temporal mediante una regresión lineal.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="modelado-serie-suavización-exponencial-y-métodos.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(serie_de_tiempo)</span>
+<span id="cb18-2"><a href="modelado-serie-suavización-exponencial-y-métodos.html#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">reg =</span> <span class="fu">lm</span>(serie_de_tiempo <span class="sc">~</span> <span class="fu">time</span>(serie_de_tiempo)))</span></code></pre></div>
+<p><img src="Analisisvandalismo_files/figure-html/unnamed-chunk-16-1.png" width="960" /></p>
+<div id="método-suavización-exponencial" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> Método Suavización Exponencial<a href="modelado-serie-suavización-exponencial-y-métodos.html#método-suavización-exponencial" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Aunque de acuerdo al criterio de la prueba prueba de Dickey-Fuller aumentada (ADF), la serie de tiempo es estacionaria y no muestra una tendencia o componente estacional, es posible que el método de Suavización Exponencial Simple no sea útil en este contexto</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="modelado-serie-suavización-exponencial-y-métodos.html#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Aplicar suavizamiento exponencial simple</span></span>
+<span id="cb19-2"><a href="modelado-serie-suavización-exponencial-y-métodos.html#cb19-2" aria-hidden="true" tabindex="-1"></a>modelo_suavizado <span class="ot">&lt;-</span> <span class="fu">HoltWinters</span>(serie_de_tiempo, <span class="at">beta =</span> <span class="cn">FALSE</span>, <span class="at">gamma =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb19-3"><a href="modelado-serie-suavización-exponencial-y-métodos.html#cb19-3" aria-hidden="true" tabindex="-1"></a>modelo_suavizado</span></code></pre></div>
+<pre><code>## Holt-Winters exponential smoothing without trend and without seasonal component.
+## 
+## Call:
+## HoltWinters(x = serie_de_tiempo, beta = FALSE, gamma = FALSE)
+## 
+## Smoothing parameters:
+##  alpha: 0.08937546
+##  beta : FALSE
+##  gamma: FALSE
+## 
+## Coefficients:
+##       [,1]
+## a 11.23855</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="modelado-serie-suavización-exponencial-y-métodos.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Hacer pronósticos con suavizamiento exponencial simple</span></span>
+<span id="cb21-2"><a href="modelado-serie-suavización-exponencial-y-métodos.html#cb21-2" aria-hidden="true" tabindex="-1"></a>pronosticos_suavizado <span class="ot">&lt;-</span> <span class="fu">forecast</span>(modelo_suavizado, <span class="at">h =</span> <span class="dv">30</span>)  <span class="co"># Pronóstico para 30 días.</span></span>
+<span id="cb21-3"><a href="modelado-serie-suavización-exponencial-y-métodos.html#cb21-3" aria-hidden="true" tabindex="-1"></a>pronosticos_suavizado</span></code></pre></div>
+<pre><code>##          Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95
+## 3.533333       11.23855 6.296689 16.18041 3.680628 18.79647
+## 3.537500       11.23855 6.276991 16.20010 3.650502 18.82659
+## 3.541667       11.23855 6.257370 16.21972 3.620495 18.85660
+## 3.545833       11.23855 6.237827 16.23927 3.590605 18.88649
+## 3.550000       11.23855 6.218359 16.25874 3.560832 18.91626
+## 3.554167       11.23855 6.198967 16.27813 3.531174 18.94592
+## 3.558333       11.23855 6.179649 16.29745 3.501630 18.97546
+## 3.562500       11.23855 6.160405 16.31669 3.472198 19.00490
+## 3.566667       11.23855 6.141233 16.33586 3.442877 19.03422
+## 3.570833       11.23855 6.122133 16.35496 3.413667 19.06343
+## 3.575000       11.23855 6.103104 16.37399 3.384564 19.09253
+## 3.579167       11.23855 6.084145 16.39295 3.355569 19.12153
+## 3.583333       11.23855 6.065256 16.41184 3.326681 19.15041
+## 3.587500       11.23855 6.046435 16.43066 3.297897 19.17920
+## 3.591667       11.23855 6.027683 16.44941 3.269218 19.20788
+## 3.595833       11.23855 6.008998 16.46810 3.240641 19.23645
+## 3.600000       11.23855 5.990379 16.48672 3.212166 19.26493
+## 3.604167       11.23855 5.971826 16.50527 3.183792 19.29330
+## 3.608333       11.23855 5.953338 16.52376 3.155518 19.32158
+## 3.612500       11.23855 5.934915 16.54218 3.127341 19.34975
+## 3.616667       11.23855 5.916555 16.56054 3.099263 19.37783
+## 3.620833       11.23855 5.898259 16.57884 3.071281 19.40581
+## 3.625000       11.23855 5.880025 16.59707 3.043394 19.43370
+## 3.629167       11.23855 5.861853 16.61524 3.015603 19.46149
+## 3.633333       11.23855 5.843742 16.63335 2.987904 19.48919
+## 3.637500       11.23855 5.825691 16.65140 2.960299 19.51680
+## 3.641667       11.23855 5.807701 16.66939 2.932785 19.54431
+## 3.645833       11.23855 5.789770 16.68732 2.905362 19.57173
+## 3.650000       11.23855 5.771898 16.70520 2.878029 19.59907
+## 3.654167       11.23855 5.754084 16.72301 2.850785 19.62631</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="modelado-serie-suavización-exponencial-y-métodos.html#cb23-1" aria-hidden="true" tabindex="-1"></a>Suav_exp <span class="ot">&lt;-</span> <span class="fu">ses</span>(serie_de_tiempo, <span class="at">h =</span> <span class="dv">15</span>)</span>
+<span id="cb23-2"><a href="modelado-serie-suavización-exponencial-y-métodos.html#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(Suav_exp) <span class="sc">+</span> <span class="fu">autolayer</span>(<span class="fu">fitted</span>(Suav_exp), <span class="at">series=</span><span class="st">&quot;Fitted&quot;</span>)</span></code></pre></div>
+<p><img src="Analisisvandalismo_files/figure-html/unnamed-chunk-19-1.png" width="960" /></p>
+<p style="text-align: justify;">
+Después de aplicar el método de suavización exponencial a los datos, se llega a la conclusión de que este enfoque no logra capturar de manera efectiva una tendencia estacional presente en los datos, a pesar de tener la capacidad de detectar patrones a lo largo del tiempo, el método de suavización exponencial parece no ser adecuado para identificar y modelar la variabilidad estacional que puede influir en la serie temporal en consideración. La naturaleza de los datos parece no alinearse de manera óptima con las premisas y el enfoque del método de suavización exponencial en relación con la tendencia estacional, por lo tanto, es necesario explorar alternativas más apropiadas y específicas para abordar esta característica particular de la serie de tiempo.
+</p>
+</div>
+<div id="metodología-holter-winter-y-de-suavizamiento" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> Metodología Holter-Winter y de suavizamiento<a href="modelado-serie-suavización-exponencial-y-métodos.html#metodología-holter-winter-y-de-suavizamiento" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="modelado-serie-suavización-exponencial-y-métodos.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Instalar y cargar el paquete de suavizamiento exponencial</span></span>
+<span id="cb24-2"><a href="modelado-serie-suavización-exponencial-y-métodos.html#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forecast)</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="modelado-serie-suavización-exponencial-y-métodos.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear una serie de tiempo con frecuencia diaria</span></span>
+<span id="cb25-2"><a href="modelado-serie-suavización-exponencial-y-métodos.html#cb25-2" aria-hidden="true" tabindex="-1"></a>serie_tiempof <span class="ot">&lt;-</span> <span class="fu">ts</span>(datos_sumados<span class="sc">$</span>Calificación, <span class="at">frequency =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p style="text-align: justify;">
+La metodología Holt-Winters es un enfoque de pronóstico de series de tiempo que incorpora componentes de nivel, tendencia y estacionalidad para mejorar la precisión de las predicciones. Los tres componentes que considera son:
+</p>
+<p style="text-align: justify;">
+<ul>
+<li><strong>Componente de nivel (nivel):</strong> El nivel representa el valor medio de la serie de tiempo en un período dado. Se calcula utilizando el suavizamiento exponencial simple.</li>
+</ul>
+</p>
+<p style="text-align: justify;">
+<ul>
+<li><strong>Componente de tendencia (tendencia):</strong> La tendencia se refiere a la dirección y magnitud del cambio en la serie de tiempo. Se calcula utilizando el suavizamiento exponencial doble.</li>
+</ul>
+</p>
+<p style="text-align: justify;">
+<ul>
+<li><strong>Componente estacional (estacionalidad):</strong> La estacionalidad se refiere a las fluctuaciones regulares en la serie de tiempo debido a patrones estacionales. Se incorpora mediante el suavizamiento exponencial triple, que considera tanto la estacionalidad como la tendencia.</li>
+</ul>
+</p>
+<p style="text-align: justify;">
+La metodología Holt-Winters se adapta bien a series de tiempo que tienen tendencias y patrones estacionales. Esta técnica utiliza los valores históricos para calcular las estimaciones de los tres componentes y luego los combina para realizar pronósticos futuros.
+</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="modelado-serie-suavización-exponencial-y-métodos.html#cb26-1" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">HoltWinters</span>(serie_tiempof, <span class="at">seasonal =</span> <span class="st">&quot;additive&quot;</span>)</span>
+<span id="cb26-2"><a href="modelado-serie-suavización-exponencial-y-métodos.html#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod1)</span></code></pre></div>
+<p><img src="Analisisvandalismo_files/figure-html/unnamed-chunk-22-1.png" width="960" /></p>
+<p style="text-align: justify;">
+Al aplicar el Método Holt-Winters a nuestros datos de la serie temporal, podemos destacar observar patrones estacionales, a diferencia del enfoque de suavización exponencial, que no logró reflejar las variaciones estacionales, este Método Holt-Winters es efectivo en este sentido. El Método Holt-Winters resulta ser una herramienta útil para abordar tendencias estacionales en series temporales, ofreciendo resultados sólidos y precisos en la modelación de estos patrones.
+</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="preprocesamiento-y-visualización.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/%s",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": false,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

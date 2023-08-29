@@ -148,8 +148,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2" data-path="estructura-de-los-datos-en-series-de-tiempo.html"><a href="estructura-de-los-datos-en-series-de-tiempo.html"><i class="fa fa-check"></i><b>2</b> Estructura de los datos en series de tiempo</a>
 <ul>
 <li class="chapter" data-level="2.1" data-path="estructura-de-los-datos-en-series-de-tiempo.html"><a href="estructura-de-los-datos-en-series-de-tiempo.html#aproximación-en-promedio-móvil"><i class="fa fa-check"></i><b>2.1</b> Aproximación en promedio Móvil</a></li>
+<li class="chapter" data-level="2.2" data-path="estructura-de-los-datos-en-series-de-tiempo.html"><a href="estructura-de-los-datos-en-series-de-tiempo.html#calculo-de-los-rezagos"><i class="fa fa-check"></i><b>2.2</b> Calculo de los rezagos</a></li>
+<li class="chapter" data-level="2.3" data-path="estructura-de-los-datos-en-series-de-tiempo.html"><a href="estructura-de-los-datos-en-series-de-tiempo.html#graficar-los-resultados-promedio-y-rezagos"><i class="fa fa-check"></i><b>2.3</b> Graficar los resultados Promedio y Rezagos</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="preprocesamiento-y-visualización.html"><a href="preprocesamiento-y-visualización.html"><i class="fa fa-check"></i><b>3</b> Preprocesamiento y visualización</a></li>
+<li class="chapter" data-level="3" data-path="preprocesamiento-y-visualización.html"><a href="preprocesamiento-y-visualización.html"><i class="fa fa-check"></i><b>3</b> Preprocesamiento y visualización</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="preprocesamiento-y-visualización.html"><a href="preprocesamiento-y-visualización.html#descomposición-de-la-serie-de-tiempo"><i class="fa fa-check"></i><b>3.1</b> Descomposición de la serie de tiempo</a></li>
+<li class="chapter" data-level="3.2" data-path="preprocesamiento-y-visualización.html"><a href="preprocesamiento-y-visualización.html#verificación-estacionalidad"><i class="fa fa-check"></i><b>3.2</b> Verificación Estacionalidad</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="modelado-serie-suavización-exponencial-y-métodos.html"><a href="modelado-serie-suavización-exponencial-y-métodos.html"><i class="fa fa-check"></i><b>4</b> Modelado Serie Suavización Exponencial y Métodos</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="modelado-serie-suavización-exponencial-y-métodos.html"><a href="modelado-serie-suavización-exponencial-y-métodos.html#método-suavización-exponencial"><i class="fa fa-check"></i><b>4.1</b> Método Suavización Exponencial</a></li>
+<li class="chapter" data-level="4.2" data-path="modelado-serie-suavización-exponencial-y-métodos.html"><a href="modelado-serie-suavización-exponencial-y-métodos.html#metodología-holter-winter-y-de-suavizamiento"><i class="fa fa-check"></i><b>4.2</b> Metodología Holter-Winter y de suavizamiento</a></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -501,11 +512,14 @@ A continuación, se presenta el proceso de creación de la visualización en gr�
 <p style="text-align: justify;">
 A continuación se presenta una función esencial en el análisis de series temporales, enfocada en calcular los rezagos de una variable en un conjunto de datos, en el ámbito del análisis de series temporales, el cálculo de rezagos desempeña un papel crucial para comprender las relaciones entre observaciones pasadas y presentes en una secuencia temporal.
 </p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculo de los rezagos</span></span>
-<span id="cb8-2"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb8-2" aria-hidden="true" tabindex="-1"></a>calcular_rezagos <span class="ot">&lt;-</span> <span class="cf">function</span>(datos_sumados, Calificación, pasos) {</span>
-<span id="cb8-3"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb8-3" aria-hidden="true" tabindex="-1"></a>  datos_sumados <span class="sc">%&gt;%</span></span>
-<span id="cb8-4"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="at">.cols =</span> Calificación, <span class="at">.fns =</span> <span class="fu">list</span>(<span class="at">lag =</span> <span class="sc">~</span><span class="fu">lag</span>(., pasos)), <span class="at">.names =</span> <span class="st">&quot;{col}_lag{pasos}&quot;</span>))</span>
-<span id="cb8-5"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb8-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>}</p>
+</div>
+<div id="calculo-de-los-rezagos" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Calculo de los rezagos<a href="estructura-de-los-datos-en-series-de-tiempo.html#calculo-de-los-rezagos" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb8-1" aria-hidden="true" tabindex="-1"></a>calcular_rezagos <span class="ot">&lt;-</span> <span class="cf">function</span>(datos_sumados, Calificación, pasos) {</span>
+<span id="cb8-2"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb8-2" aria-hidden="true" tabindex="-1"></a>  datos_sumados <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="at">.cols =</span> Calificación, <span class="at">.fns =</span> <span class="fu">list</span>(<span class="at">lag =</span> <span class="sc">~</span><span class="fu">lag</span>(., pasos)), <span class="at">.names =</span> <span class="st">&quot;{col}_lag{pasos}&quot;</span>))</span>
+<span id="cb8-4"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb8-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <p style="text-align: justify;">
 Se inicia calculando los rezagos de 7 días en la columna “Calificación” del conjunto de datos “datos_sumados”, posteriormente se calculan los rezagos de 7 días en la columna “Calificación_lag7”, que ya contiene los rezagos de 7 días calculados en la etapa anterior; esto permite obtener los rezagos de 14 días.
 </p>
@@ -547,6 +561,9 @@ Procedemos crear un gráfico consolidado que permite comparar visualmente múlti
 -Las dos siguientes líneas representan los valores originales y los rezagos de 7 días en color verde y naranja, respectivamente,ambas con línea punteada de una serie temporal a lo largo del tiempo.
 </p></li>
 </ol>
+</div>
+<div id="graficar-los-resultados-promedio-y-rezagos" class="section level2 hasAnchor" number="2.3">
+<h2><span class="header-section-number">2.3</span> Graficar los resultados Promedio y Rezagos<a href="estructura-de-los-datos-en-series-de-tiempo.html#graficar-los-resultados-promedio-y-rezagos" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Graficar los resultados</span></span>
 <span id="cb13-2"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
 <span id="cb13-3"><a href="estructura-de-los-datos-en-series-de-tiempo.html#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> datos_sumados, <span class="fu">aes</span>(<span class="at">x =</span> Fecha, <span class="at">y =</span> Calificación), <span class="at">color =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">linetype =</span> <span class="st">&quot;solid&quot;</span>) <span class="sc">+</span></span>
