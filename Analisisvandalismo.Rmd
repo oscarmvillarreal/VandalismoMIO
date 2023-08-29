@@ -302,7 +302,7 @@ plot(mod1)
 ```
 
 
-<p style="text-align: justify;"> Al aplicar el Método Holt-Winters a nuestros datos de la serie temporal, podemos destacar observar patrones estacionales, a diferencia del enfoque de suavización exponencial, que no logró reflejar las variaciones estacionales, este Método Holt-Winters es efectivo en este sentido.  El Método Holt-Winters resulta ser una herramienta útil para abordar tendencias estacionales en series temporales, ofreciendo resultados sólidos y precisos en la modelación de estos patrones.
+<p style="text-align: justify;"> Al aplicar el Método Holt-Winters a nuestros datos de la serie temporal, podemos destacar observar patrones estacionales, a diferencia del enfoque de suavización exponencial, que no logró reflejar las variaciones estacionales, este Método Holt-Winters es efectivo en este sentido.  El Método Holt-Winters resulta ser una herramienta útil para abordar tendencias estacionales en series temporales, ofreciendo resultados sólidos y precisos en la modelación de estos patrones. 
 </p>
 
 
