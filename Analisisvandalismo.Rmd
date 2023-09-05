@@ -68,6 +68,10 @@ library(fpp2)
 library(zoo)
 library(TTR)
 library(tseries)
+library(aTSA)
+library(forecast)
+library(ADGofTest)
+library(lmtest)
 ```
 
 <p style="text-align: justify;"> Comenzamos el proceso al acceder a la base de datos de vandalismos, que  contiene información correspondiente de vandalismos a la flota del SITM MIO de los años 2021 y 2022.</p>
@@ -228,11 +232,11 @@ print(adf_test)
 
 # Modelado Serie Suavización Exponencial y Métodos
 
-<p style="text-align: justify;"> En este capítulo, se abordará el análisis y modelado de una serie de tiempo utilizando dos enfoques ampliamente utilizados: la suavización exponencial y el método de Holt-Winters.
+<p style="text-align: justify;"> En este capítulo, se abordará el análisis y modelado de una serie de tiempo utilizando dos enfoques ampliamente utilizados: la suavización exponencial y el método de Holt-Winters.</p>
 
-Estos métodos son herramientas valiosas en el campo del análisis de series temporales y permiten capturar y predecir patrones en los datos a lo largo del tiempo.</p>
+<p style="text-align: justify;"> Estos métodos son herramientas valiosas en el campo del análisis de series temporales y permiten capturar y predecir patrones en los datos a lo largo del tiempo.</p>
 
-Examinemos el enfoque de modelado de esta serie temporal mediante una regresión lineal. 
+<p style="text-align: justify;"> Examinemos el enfoque de modelado de esta serie temporal mediante una regresión lineal. </p>
 
 ```{r, fig.width=10, fig.height=5, warning=FALSE}
 plot(serie_de_tiempo)
@@ -242,7 +246,7 @@ abline(reg = lm(serie_de_tiempo ~ time(serie_de_tiempo)))
 
 ## Método Suavización Exponencial
 
-Aunque de acuerdo al criterio de la prueba prueba de Dickey-Fuller aumentada (ADF), la serie de tiempo es estacionaria y no muestra una tendencia o componente estacional, es posible que el método de Suavización Exponencial Simple no sea útil en este contexto
+<p style="text-align: justify;"> Aunque de acuerdo al criterio de la prueba prueba de Dickey-Fuller aumentada (ADF), la serie de tiempo es estacionaria y no muestra una tendencia o componente estacional, es posible que el método de Suavización Exponencial Simple no sea útil en este contexto</p>
 
 
 ```{r}
@@ -252,11 +256,7 @@ modelo_suavizado
 
 ```
 
-```{r}
-# Hacer pronósticos con suavizamiento exponencial simple
-pronosticos_suavizado <- forecast(modelo_suavizado, h = 30)  # Pronóstico para 30 días.
-pronosticos_suavizado
-```
+
 
 ```{r, fig.width=10, fig.height=5, warning=FALSE}
 Suav_exp <- ses(serie_de_tiempo, h = 15)
@@ -300,11 +300,146 @@ serie_tiempof <- ts(datos_sumados$Calificación, frequency = 2)
 mod1 <- HoltWinters(serie_tiempof, seasonal = "additive")
 plot(mod1)
 ```
+```{r}
+adf.test(diff(serie_tiempof))
+```
 
-
-<p style="text-align: justify;"> Al aplicar el Método Holt-Winters a nuestros datos de la serie temporal, podemos destacar observar patrones estacionales, a diferencia del enfoque de suavización exponencial, que no logró reflejar las variaciones estacionales, este Método Holt-Winters es efectivo en este sentido.  El Método Holt-Winters resulta ser una herramienta útil para abordar tendencias estacionales en series temporales, ofreciendo resultados sólidos y precisos en la modelación de estos patrones. 
+<p style="text-align: justify;"> Al aplicar el Método Holt-Winters a nuestros datos de la serie temporal, podemos destacar observar patrones estacionales, a diferencia del enfoque de suavización exponencial, que no logró reflejar las variaciones estacionales, este Método Holt-Winters es efectivo en este sentido.  El Método Holt-Winters resulta ser una herramienta útil para abordar tendencias estacionales en series temporales, ofreciendo resultados sólidos y precisos en la modelación de estos patrones.  
 </p>
 
+# Método Box-Jenkins Modelo ARIMA
 
 
+<p style="text-align: justify;"> En el mundo del análisis de series de tiempo, el descubrimiento y la comprensión de patrones temporales son cruciales para tomar decisiones informadas, una de las técnicas más poderosas en este campo es la metodología ARIMA (Autoregressive Integrated Moving Average).</p>
 
+
+## ¿Por qué ARIMA para datos estacionales?
+
+<p style="text-align: justify;"> Cuando trabajamos con series de tiempo, es probable encontrar datos que permiten observar patrones recurrentes en momentos del año, del mes o incluso del día; estos patrones estacionales pueden deberse a factores como estacionalidad o tendencias de comportamiento humano estacionales. </p>
+
+<p style="text-align: justify;"> Para modelar y predecir de manera efectiva en tales casos, esta metodología es capaz de capturar estos patrones de estacionalidad.</p>
+
+
+<p style="text-align: justify;"> Se calculó el Augmented Dickey-Fuller Test a la serie de tiempo con la suavización exponencial aplicando metodología Holter Winter, en la cual se evidenvia que el p-valor es tan bajo como 0.01, confirmamos entonces que la serie de tiempo ya se encuentra en un estado estacionario,  resultado fundamental para aplicar con precisión modelos de series de tiempo como ARIMA.</p>
+
+```{r}
+adf.test(diff(serie_tiempof))
+```
+<p style="text-align: justify;"> Como se mencionó anteriormente según la prueba DFT, la series es estacionaria y se procede a determinar los parámetros ARIMA</p>
+
+
+```{r}
+modeloARIMA<-auto.arima(diff(serie_tiempof),  seasonal = FALSE)
+summary(modeloARIMA) 
+```
+
+
+<p style="text-align: justify;"> Se procede a ajustar un modelo ARIMA a una serie de tiempo y se define el order del párametro c(p,d,q), Orden de Diferenciación (d) (ya es estacionaria, d=0), Orden de Autoregresión (p y q= valor seleccionado basándose en el último rezago significativo).</p>
+
+
+```{r}
+modelo_ARIMA <- arima(diff(serie_tiempof), order = c(0,0,2))
+n_predicciones <- 10
+modpredicciones <- predict(modelo_ARIMA, n.ahead = n_predicciones)
+```
+
+## Predicción Modelo ARIMA
+
+<p style="text-align: justify;">  Luego de definido el modelo ARIMA para realizar predicciones, el siguiente paso es visualizar y evaluar la continuidad de las predicciones en relación con los datos reales, la visualización es una parte esencial del proceso de modelado de series de tiempo, ya que nos permite comprender si el modelo está capturando adecuadamente los patrones en los datos y si las predicciones son coherentes con el comportamiento histórico de la serie.</p>
+
+```{r, fig.width=10, fig.height=5, warning=FALSE}
+
+plot(diff(serie_tiempof) , main = "Serie Temporal predicción")
+lines(modpredicciones$pred, col = "red", lty = 4)  # Línea de predicción
+legend("topright", legend = "Predicción", col = "red", lty = 4)
+```
+
+<p style="text-align: justify;">  Realizamos un zoom a la predicción y comparamos con otro periodo para obervar similitud.</p>
+
+```{r}
+inicio_zoom <- 300
+fin_zoom <- 305
+plot(diff(serie_tiempof), main = "Zoom Serie Temporal predicción", xlim = c(inicio_zoom, fin_zoom))
+lines(modpredicciones$pred[inicio_zoom:fin_zoom], col = "red", lty = 4)
+legend("topright", legend = "Predicción", col = "red", lty = 4)
+```
+```{r}
+inicio_zoom <- 292
+fin_zoom <- 299
+plot(diff(serie_tiempof), main = "Zoom Serie Temporal sin predicción", xlim = c(inicio_zoom, fin_zoom))
+lines(modpredicciones$pred[inicio_zoom:fin_zoom], col = "red", lty = 4)
+legend("topright", legend = "Predicción", col = "red", lty = 4)
+```
+
+<p style="text-align: justify;">  Observamos similitud entre el rango de los datos y el pronóstico.</p>
+
+
+## Comparativo Serie de Tiempo suavizada - Modelo ARIMA
+
+
+```{r, fig.width=10, fig.height=5, warning=FALSE}
+plot(diff(serie_tiempof), main = "Serie Tiempo suavizada Winter Holters vs. Modelo ARIMA")
+lines(fitted(modelo_ARIMA), col = "green",  lwd = 0.5)
+```
+<p style="text-align: justify;">  Se enfatiza que la serie es estacionaria y se menciona que el modelo parece adaptarse adecuadamente a la serie sin tendencia evidente, mientras se reconoce que aún no se han definido medidas de desempeño específicas.</p>
+
+## Comprobaciones Modelo ARIMA
+
+<p style="text-align: justify;"> Procedemos a realizar 3 comprobaciones del modelo ARIMA, evaluando la válidez del modelo y la calidad de las predicciones.
+
+- **Distribución de los errores:** Los modelos ARIMA asumen que los residuales siguen una distribución normal, si los residuales no siguen una distribución normal, esto puede afectar la precisión de las estimaciones de parámetros y las pruebas de significancia. También puede influir en la confiabilidad de las predicciones y en la interpretación de los resultados.
+
+- **Independencia de los Residuales:** La independencia de los residuales es esencial, si los residuales están correlacionados en el tiempo, indica que el modelo no ha capturado completamente la estructura temporal de los datos; llevando a inferencias erróneas y predicciones inexactas.
+
+- **Homocedasticidad de los Residuales:** La homocedasticidad significa que la varianza de los residuales es constante a lo largo del tiempo, esto es importante porque garantiza que los errores tengan la misma "dispersión" en toda la serie temporal. Cuando los residuales son heterocedásticos , las predicciones pueden ser inexactas debido a la variabilidad no constante de los errores.</p>
+
+<p style="text-align: justify;"> Estas pruebas ayudan a verificar si se cumplen las suposiciones fundamentales del modelo y, si no se cumplen, pueden indicar la necesidad de ajustar el modelo, transformar los datos o considerar enfoques alternativos para mejorar la calidad de las predicciones y análisis de series temporales.</p>
+
+
+<p style="text-align: justify;"> Procedemos a determinar los residuales del modelo ARIMA y determinar la hipotesis que permite evaluar la estacionariedad de la serie</p>
+
+### Normalidad ARIMA
+
+```{r}
+residuales<-modelo_ARIMA$residuals
+qqnorm(residuales)
+qqline(residuales)
+```
+
+
+```{r}
+resultado <- ks.test(residuales, "pnorm", mean(residuales), sd(residuales))
+print(resultado)
+```
+
+<p style="text-align: justify;">  En este caso, 0,00719 significa que el valor p es extremadamente cercano a cero, un valor p tan pequeño indica una evidencia estadística muy sólida para rechazar la hipótesis nula; esto indicaría que la serie de tiempo es muy probablemente estacionaria en lugar de no estacionaria.</p>
+
+
+### Independencia
+
+<p style="text-align: justify;"> Calcular y verificar la independencia de los datos es esencial al trabajar con modelos ARIMA para garantizar que se cumplan las suposiciones fundamentales del modelo, esto contribuye a la precisión de las predicciones, la interpretación de los resultados y la confiabilidad del análisis de series temporales en general.</p>
+
+HO: Los residuales son independientes
+
+H1: Los residuales son dependientes 
+
+```{r}
+shapiro.test(residuales)
+```
+<p style="text-align: justify;">Dado que el valor p (p-value) es extremadamente bajo (6.196e-10), mucho menor que un nivel de significancia típico como 0.05, se rechaza la hipótesis nula (H0), los residuales son dependientes, </p>
+
+
+<p style="text-align: justify;"> Procedemos a definir el tercer criterio de Homocedasticidad </p> 
+
+### Homocedastidad
+```{r}
+# Obtén los residuales del modelo ARIMA (reemplaza 'modelo_arima' con tu propio modelo)
+residuales <- residuals(modelo_ARIMA)
+
+# Crea un gráfico de dispersión de residuales vs. tiempo
+plot(residuales, type = 'o', ylab = 'Residuales', xlab = 'Tiempo', main = 'Gráfico de Residuales')
+abline(h = 0, col = 'red', lty = 2)  # Línea horizontal en y = 0
+
+```
+
+<p style="text-align: justify;"> Mediante el método de gráfico de dispersión de los residuales al parecer existe Homocedasticidad, puesto que los puntos están dispersos aleatoriamente alrededor de una línea horizontal en el gráfico.</p>

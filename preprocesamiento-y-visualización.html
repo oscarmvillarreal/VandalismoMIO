@@ -161,6 +161,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.1" data-path="modelado-serie-suavización-exponencial-y-métodos.html"><a href="modelado-serie-suavización-exponencial-y-métodos.html#método-suavización-exponencial"><i class="fa fa-check"></i><b>4.1</b> Método Suavización Exponencial</a></li>
 <li class="chapter" data-level="4.2" data-path="modelado-serie-suavización-exponencial-y-métodos.html"><a href="modelado-serie-suavización-exponencial-y-métodos.html#metodología-holter-winter-y-de-suavizamiento"><i class="fa fa-check"></i><b>4.2</b> Metodología Holter-Winter y de suavizamiento</a></li>
 </ul></li>
+<li class="chapter" data-level="5" data-path="método-box-jenkins-modelo-arima.html"><a href="método-box-jenkins-modelo-arima.html"><i class="fa fa-check"></i><b>5</b> Método Box-Jenkins Modelo ARIMA</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="método-box-jenkins-modelo-arima.html"><a href="método-box-jenkins-modelo-arima.html#por-qué-arima-para-datos-estacionales"><i class="fa fa-check"></i><b>5.1</b> ¿Por qué ARIMA para datos estacionales?</a></li>
+<li class="chapter" data-level="5.2" data-path="método-box-jenkins-modelo-arima.html"><a href="método-box-jenkins-modelo-arima.html#predicción-modelo-arima"><i class="fa fa-check"></i><b>5.2</b> Predicción Modelo ARIMA</a></li>
+<li class="chapter" data-level="5.3" data-path="método-box-jenkins-modelo-arima.html"><a href="método-box-jenkins-modelo-arima.html#comparativo-serie-de-tiempo-suavizada---modelo-arima"><i class="fa fa-check"></i><b>5.3</b> Comparativo Serie de Tiempo suavizada - Modelo ARIMA</a></li>
+<li class="chapter" data-level="5.4" data-path="método-box-jenkins-modelo-arima.html"><a href="método-box-jenkins-modelo-arima.html#comprobaciones-modelo-arima"><i class="fa fa-check"></i><b>5.4</b> Comprobaciones Modelo ARIMA</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="método-box-jenkins-modelo-arima.html"><a href="método-box-jenkins-modelo-arima.html#normalidad-arima"><i class="fa fa-check"></i><b>5.4.1</b> Normalidad ARIMA</a></li>
+<li class="chapter" data-level="5.4.2" data-path="método-box-jenkins-modelo-arima.html"><a href="método-box-jenkins-modelo-arima.html#independencia"><i class="fa fa-check"></i><b>5.4.2</b> Independencia</a></li>
+<li class="chapter" data-level="5.4.3" data-path="método-box-jenkins-modelo-arima.html"><a href="método-box-jenkins-modelo-arima.html#homocedastidad"><i class="fa fa-check"></i><b>5.4.3</b> Homocedastidad</a></li>
+</ul></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -201,14 +213,63 @@ Se procede a realizar una verificación muy necesaria para el análisis de nuest
 <div id="verificación-estacionalidad" class="section level2 hasAnchor" number="3.2">
 <h2><span class="header-section-number">3.2</span> Verificación Estacionalidad<a href="preprocesamiento-y-visualización.html#verificación-estacionalidad" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="preprocesamiento-y-visualización.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Verificar estacionalidad</span></span>
-<span id="cb16-2"><a href="preprocesamiento-y-visualización.html#cb16-2" aria-hidden="true" tabindex="-1"></a>adf_test <span class="ot">&lt;-</span> <span class="fu">adf.test</span>(datos_sumados<span class="sc">$</span>Calificación)</span>
-<span id="cb16-3"><a href="preprocesamiento-y-visualización.html#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(adf_test)</span></code></pre></div>
-<pre><code>## 
-##  Augmented Dickey-Fuller Test
+<span id="cb16-2"><a href="preprocesamiento-y-visualización.html#cb16-2" aria-hidden="true" tabindex="-1"></a>adf_test <span class="ot">&lt;-</span> <span class="fu">adf.test</span>(datos_sumados<span class="sc">$</span>Calificación)</span></code></pre></div>
+<pre><code>## Augmented Dickey-Fuller Test 
+## alternative: stationary 
+##  
+## Type 1: no drift no trend 
+##      lag   ADF p.value
+## [1,]   0 -7.22  0.0100
+## [2,]   1 -4.40  0.0100
+## [3,]   2 -3.04  0.0100
+## [4,]   3 -2.46  0.0149
+## [5,]   4 -2.00  0.0459
+## [6,]   5 -1.48  0.1497
+## Type 2: with drift no trend 
+##      lag    ADF p.value
+## [1,]   0 -19.83    0.01
+## [2,]   1 -13.88    0.01
+## [3,]   2 -10.66    0.01
+## [4,]   3  -9.35    0.01
+## [5,]   4  -8.12    0.01
+## [6,]   5  -6.62    0.01
+## Type 3: with drift and trend 
+##      lag    ADF p.value
+## [1,]   0 -20.89    0.01
+## [2,]   1 -14.84    0.01
+## [3,]   2 -11.50    0.01
+## [4,]   3 -10.20    0.01
+## [5,]   4  -8.94    0.01
+## [6,]   5  -7.33    0.01
+## ---- 
+## Note: in fact, p.value = 0.01 means p.value &lt;= 0.01</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="preprocesamiento-y-visualización.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(adf_test)</span></code></pre></div>
+<pre><code>## $type1
+##      lag       ADF    p.value
+## [1,]   0 -7.220949 0.01000000
+## [2,]   1 -4.402333 0.01000000
+## [3,]   2 -3.044808 0.01000000
+## [4,]   3 -2.464902 0.01493277
+## [5,]   4 -1.995575 0.04593085
+## [6,]   5 -1.480760 0.14972914
 ## 
-## data:  datos_sumados$Calificación
-## Dickey-Fuller = -5.7059, Lag order = 8, p-value = 0.01
-## alternative hypothesis: stationary</code></pre>
+## $type2
+##      lag        ADF p.value
+## [1,]   0 -19.834365    0.01
+## [2,]   1 -13.884085    0.01
+## [3,]   2 -10.657969    0.01
+## [4,]   3  -9.348404    0.01
+## [5,]   4  -8.117266    0.01
+## [6,]   5  -6.621827    0.01
+## 
+## $type3
+##      lag        ADF p.value
+## [1,]   0 -20.886341    0.01
+## [2,]   1 -14.836634    0.01
+## [3,]   2 -11.501365    0.01
+## [4,]   3 -10.195031    0.01
+## [5,]   4  -8.938601    0.01
+## [6,]   5  -7.328709    0.01</code></pre>
 <p style="text-align: justify;">
 El valor p (0.01 en este caso) es menor que el nivel comúnmente utilizado de 0.05, lo que indica que se rechaza la hipótesis nula. La hipótesis nula en este caso es que la serie de tiempo tiene una raíz unitaria y no es “estacionaria”, dado que el valor p es pequeño, se puede concluir que hay suficiente evidencia estadística para decir que la serie de tiempo es estacionaria en función de los resultados de la prueba ADF, gracias a la estacionariedad de la serie, evitaremos la necesidad de realizar diferenciación en este caso particular.
 </p>

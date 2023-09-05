@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Análisis de Vandalismos a la Flota del SITM MIO en Cali: Importancia y Justificación</title>
+  <title>5 Predicción ARIMA | Análisis de Vandalismos a la Flota del SITM MIO en Cali: Importancia y Justificación</title>
   <meta name="description" content="En este libro, exploraremos en detalle la base de datos que recopila información sobre los incidentes de vandalismo que han afectado al Sistema Integrado de Transporte Masivo (SITM) conocido como MIO. El MIO es un sistema de transporte público que opera en la ciudad de Cali, Colombia, y ha sido objeto de diversos actos de vandalismo a lo largo del tiempo. The output format for this example is bookdown::gitbook." />
   <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Análisis de Vandalismos a la Flota del SITM MIO en Cali: Importancia y Justificación" />
+  <meta property="og:title" content="5 Predicción ARIMA | Análisis de Vandalismos a la Flota del SITM MIO en Cali: Importancia y Justificación" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="En este libro, exploraremos en detalle la base de datos que recopila información sobre los incidentes de vandalismo que han afectado al Sistema Integrado de Transporte Masivo (SITM) conocido como MIO. El MIO es un sistema de transporte público que opera en la ciudad de Cali, Colombia, y ha sido objeto de diversos actos de vandalismo a lo largo del tiempo. The output format for this example is bookdown::gitbook." />
   <meta name="github-repo" content="rstudio/bookdown-demo" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Análisis de Vandalismos a la Flota del SITM MIO en Cali: Importancia y Justificación" />
+  <meta name="twitter:title" content="5 Predicción ARIMA | Análisis de Vandalismos a la Flota del SITM MIO en Cali: Importancia y Justificación" />
   
   <meta name="twitter:description" content="En este libro, exploraremos en detalle la base de datos que recopila información sobre los incidentes de vandalismo que han afectado al Sistema Integrado de Transporte Masivo (SITM) conocido como MIO. El MIO es un sistema de transporte público que opera en la ciudad de Cali, Colombia, y ha sido objeto de diversos actos de vandalismo a lo largo del tiempo. The output format for this example is bookdown::gitbook." />
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-<link rel="next" href="estructura-de-los-datos-en-series-de-tiempo.html"/>
+<link rel="prev" href="modelado-serie-suavización-exponencial-y-métodos.html"/>
+<link rel="next" href="comparativo-serie-de-teimpo-suavizada---modelo-arima.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -160,19 +160,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li class="chapter" data-level="4.1" data-path="modelado-serie-suavización-exponencial-y-métodos.html"><a href="modelado-serie-suavización-exponencial-y-métodos.html#método-suavización-exponencial"><i class="fa fa-check"></i><b>4.1</b> Método Suavización Exponencial</a></li>
 <li class="chapter" data-level="4.2" data-path="modelado-serie-suavización-exponencial-y-métodos.html"><a href="modelado-serie-suavización-exponencial-y-métodos.html#metodología-holter-winter-y-de-suavizamiento"><i class="fa fa-check"></i><b>4.2</b> Metodología Holter-Winter y de suavizamiento</a></li>
+<li class="chapter" data-level="4.3" data-path="modelado-serie-suavización-exponencial-y-métodos.html"><a href="modelado-serie-suavización-exponencial-y-métodos.html#método-box-jenkins-modelo-arima"><i class="fa fa-check"></i><b>4.3</b> Método Box-Jenkins Modelo ARIMA</a></li>
+<li class="chapter" data-level="4.4" data-path="modelado-serie-suavización-exponencial-y-métodos.html"><a href="modelado-serie-suavización-exponencial-y-métodos.html#por-qué-arima-para-datos-estacionales"><i class="fa fa-check"></i><b>4.4</b> ¿Por qué ARIMA para datos estacionales?</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="método-box-jenkins-modelo-arima.html"><a href="método-box-jenkins-modelo-arima.html"><i class="fa fa-check"></i><b>5</b> Método Box-Jenkins Modelo ARIMA</a>
-<ul>
-<li class="chapter" data-level="5.1" data-path="método-box-jenkins-modelo-arima.html"><a href="método-box-jenkins-modelo-arima.html#por-qué-arima-para-datos-estacionales"><i class="fa fa-check"></i><b>5.1</b> ¿Por qué ARIMA para datos estacionales?</a></li>
-<li class="chapter" data-level="5.2" data-path="método-box-jenkins-modelo-arima.html"><a href="método-box-jenkins-modelo-arima.html#predicción-modelo-arima"><i class="fa fa-check"></i><b>5.2</b> Predicción Modelo ARIMA</a></li>
-<li class="chapter" data-level="5.3" data-path="método-box-jenkins-modelo-arima.html"><a href="método-box-jenkins-modelo-arima.html#comparativo-serie-de-tiempo-suavizada---modelo-arima"><i class="fa fa-check"></i><b>5.3</b> Comparativo Serie de Tiempo suavizada - Modelo ARIMA</a></li>
-<li class="chapter" data-level="5.4" data-path="método-box-jenkins-modelo-arima.html"><a href="método-box-jenkins-modelo-arima.html#comprobaciones-modelo-arima"><i class="fa fa-check"></i><b>5.4</b> Comprobaciones Modelo ARIMA</a>
-<ul>
-<li class="chapter" data-level="5.4.1" data-path="método-box-jenkins-modelo-arima.html"><a href="método-box-jenkins-modelo-arima.html#normalidad-arima"><i class="fa fa-check"></i><b>5.4.1</b> Normalidad ARIMA</a></li>
-<li class="chapter" data-level="5.4.2" data-path="método-box-jenkins-modelo-arima.html"><a href="método-box-jenkins-modelo-arima.html#independencia"><i class="fa fa-check"></i><b>5.4.2</b> Independencia</a></li>
-<li class="chapter" data-level="5.4.3" data-path="método-box-jenkins-modelo-arima.html"><a href="método-box-jenkins-modelo-arima.html#homocedastidad"><i class="fa fa-check"></i><b>5.4.3</b> Homocedastidad</a></li>
-</ul></li>
-</ul></li>
+<li class="chapter" data-level="5" data-path="predicción-arima.html"><a href="predicción-arima.html"><i class="fa fa-check"></i><b>5</b> Predicción ARIMA</a></li>
+<li class="chapter" data-level="6" data-path="comparativo-serie-de-teimpo-suavizada---modelo-arima.html"><a href="comparativo-serie-de-teimpo-suavizada---modelo-arima.html"><i class="fa fa-check"></i><b>6</b> Comparativo Serie de Teimpo suavizada - Modelo ARIMA</a></li>
+<li class="chapter" data-level="7" data-path="homocedastidad.html"><a href="homocedastidad.html"><i class="fa fa-check"></i><b>7</b> Homocedastidad</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -193,49 +186,41 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">Análisis de Vandalismos a la Flota del SITM MIO en Cali: Importancia y Justificación</h1>
-<p class="author"><em>Karol Mejía - Oscar Morán</em></p>
-<p class="date"><em>21/08/2023</em></p>
-</div>
-<div id="descripción-data-vandalismo-flota-sitm-mio" class="section level1 hasAnchor" number="1">
-<h1><span class="header-section-number">1</span> Descripción data Vandalismo flota SITM MIO<a href="descripción-data-vandalismo-flota-sitm-mio.html#descripción-data-vandalismo-flota-sitm-mio" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div id="introducción" class="section level2 hasAnchor" number="1.1">
-<h2><span class="header-section-number">1.1</span> Introducción<a href="descripción-data-vandalismo-flota-sitm-mio.html#introducción" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="predicción-arima" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">5</span> Predicción ARIMA<a href="predicción-arima.html#predicción-arima" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p style="text-align: justify;">
-El presente documento tiene como objetivo analizar la base de datos histórica de vandalismos a la flota del Sistema Integrado de Transporte Masivo (SITM) MIO en la ciudad de Cali, Colombia. La información ha sido suministrada internamente por Metro Cali, lo que garantiza el acceso a datos confiables y autorizados para su análisis.
+Luego de definido el modelo ARIMA para realizar predicciones, el siguiente paso es visualizar y evaluar la continuidad de las predicciones en relación con los datos reales, la visualización es una parte esencial del proceso de modelado de series de tiempo, ya que nos permite comprender si el modelo está capturando adecuadamente los patrones en los datos y si las predicciones son coherentes con el comportamiento histórico de la serie.
 </p>
-</div>
-<div id="justificación" class="section level2 hasAnchor" number="1.2">
-<h2><span class="header-section-number">1.2</span> Justificación<a href="descripción-data-vandalismo-flota-sitm-mio.html#justificación" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="predicción-arima.html#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">diff</span>(serie_tiempof) , <span class="at">main =</span> <span class="st">&quot;Serie Temporal predicción&quot;</span>)</span>
+<span id="cb34-2"><a href="predicción-arima.html#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(modpredicciones<span class="sc">$</span>pred, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="dv">4</span>)  <span class="co"># Línea de predicción</span></span>
+<span id="cb34-3"><a href="predicción-arima.html#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="at">legend =</span> <span class="st">&quot;Predicción&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="dv">4</span>)</span></code></pre></div>
+<p><img src="Analisisvandalismo_files/figure-html/unnamed-chunk-26-1.png" width="960" /></p>
 <p style="text-align: justify;">
-El estudio de la base de datos histórica de vandalismos a la flota del SITM MIO reviste gran importancia por diversas razones:
+Realizamos un zoom a la predicción y comparamos con otro periodo para obervar similitud.
 </p>
-<ol style="list-style-type: decimal">
-<li><p style="text-align: justify;">
-<p><strong>Impacto en el Transporte Público:</strong> El vandalismo a los autobuses y estaciones del MIO puede ocasionar daños significativos, generando costos operativos adicionales para el sistema. Este análisis nos permitirá comprender la magnitud del problema y cuantificar su impacto en el transporte público de la ciudad.</p>
-</p></li>
-<li><p><strong>Seguridad Ciudadana:</strong> Los actos de vandalismo también pueden afectar la seguridad de los usuarios y trabajadores del transporte público. Al analizar los datos, podremos identificar áreas y momentos de mayor riesgo, lo que facilitará la implementación de estrategias de prevención y protección.</p></li>
-<li><p><strong>Toma de Decisiones:</strong> Contar con información sólida sobre los incidentes de vandalismo permitirá a las autoridades y a Metro Cali tomar decisiones informadas y eficientes para mejorar la protección de la flota y reducir los daños.</p></li>
-<li><p><strong>Detección de Patrones y Tendencias:</strong> Mediante técnicas de análisis de datos, podremos identificar patrones y tendencias en los actos de vandalismo. Esto puede ser útil para anticipar futuros incidentes y diseñar políticas de prevención más efectivas.</p></li>
-<li><p><strong>Mejora del Servicio:</strong> Al entender mejor la naturaleza de los vandalismos, se pueden implementar estrategias para minimizar los tiempos de inactividad de la flota y mejorar la calidad del servicio ofrecido a los usuarios.</p>
-</p></li>
-</ol>
-</div>
-<div id="fuentes-y-permisos-de-uso" class="section level2 hasAnchor" number="1.3">
-<h2><span class="header-section-number">1.3</span> Fuentes y Permisos de Uso<a href="descripción-data-vandalismo-flota-sitm-mio.html#fuentes-y-permisos-de-uso" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="predicción-arima.html#cb35-1" aria-hidden="true" tabindex="-1"></a>inicio_zoom <span class="ot">&lt;-</span> <span class="dv">300</span></span>
+<span id="cb35-2"><a href="predicción-arima.html#cb35-2" aria-hidden="true" tabindex="-1"></a>fin_zoom <span class="ot">&lt;-</span> <span class="dv">305</span></span>
+<span id="cb35-3"><a href="predicción-arima.html#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">diff</span>(serie_tiempof), <span class="at">main =</span> <span class="st">&quot;Zoom Serie Temporal predicción&quot;</span>, <span class="at">xlim =</span> <span class="fu">c</span>(inicio_zoom, fin_zoom))</span>
+<span id="cb35-4"><a href="predicción-arima.html#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(modpredicciones<span class="sc">$</span>pred[inicio_zoom<span class="sc">:</span>fin_zoom], <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="dv">4</span>)</span>
+<span id="cb35-5"><a href="predicción-arima.html#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="at">legend =</span> <span class="st">&quot;Predicción&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="dv">4</span>)</span></code></pre></div>
+<p><img src="Analisisvandalismo_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="predicción-arima.html#cb36-1" aria-hidden="true" tabindex="-1"></a>inicio_zoom <span class="ot">&lt;-</span> <span class="dv">292</span></span>
+<span id="cb36-2"><a href="predicción-arima.html#cb36-2" aria-hidden="true" tabindex="-1"></a>fin_zoom <span class="ot">&lt;-</span> <span class="dv">299</span></span>
+<span id="cb36-3"><a href="predicción-arima.html#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">diff</span>(serie_tiempof), <span class="at">main =</span> <span class="st">&quot;Zoom Serie Temporal sin predicción&quot;</span>, <span class="at">xlim =</span> <span class="fu">c</span>(inicio_zoom, fin_zoom))</span>
+<span id="cb36-4"><a href="predicción-arima.html#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(modpredicciones<span class="sc">$</span>pred[inicio_zoom<span class="sc">:</span>fin_zoom], <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="dv">4</span>)</span>
+<span id="cb36-5"><a href="predicción-arima.html#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="at">legend =</span> <span class="st">&quot;Predicción&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="dv">4</span>)</span></code></pre></div>
+<p><img src="Analisisvandalismo_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
 <p style="text-align: justify;">
-La información utilizada en este análisis proviene de la base de datos suministrada internamente por Metro Cali. Se ha obtenido el permiso explícito para utilizar estos datos con fines analíticos y académicos, garantizando la confidencialidad y protección de la información sensible.
+Observamos similitud entre el rango de los datos y el pronóstico.
 </p>
-</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-<a href="estructura-de-los-datos-en-series-de-tiempo.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="modelado-serie-suavización-exponencial-y-métodos.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="comparativo-serie-de-teimpo-suavizada---modelo-arima.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
