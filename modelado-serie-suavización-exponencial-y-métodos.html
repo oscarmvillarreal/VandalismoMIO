@@ -173,6 +173,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.4.3" data-path="método-box-jenkins-modelo-arima.html"><a href="método-box-jenkins-modelo-arima.html#homocedastidad"><i class="fa fa-check"></i><b>5.4.3</b> Homocedastidad</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="6" data-path="prophet.html"><a href="prophet.html"><i class="fa fa-check"></i><b>6</b> Prophet</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="prophet.html"><a href="prophet.html#modelo"><i class="fa fa-check"></i><b>6.1</b> Modelo</a></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -265,7 +269,24 @@ La metodología Holt-Winters se adapta bien a series de tiempo que tienen tenden
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="modelado-serie-suavización-exponencial-y-métodos.html#cb26-1" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">HoltWinters</span>(serie_tiempof, <span class="at">seasonal =</span> <span class="st">&quot;additive&quot;</span>)</span>
 <span id="cb26-2"><a href="modelado-serie-suavización-exponencial-y-métodos.html#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(mod1)</span></code></pre></div>
 <p><img src="Analisisvandalismo_files/figure-html/unnamed-chunk-21-1.png" width="960" /></p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="modelado-serie-suavización-exponencial-y-métodos.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adf.test</span>(<span class="fu">diff</span>(serie_tiempof))</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="modelado-serie-suavización-exponencial-y-métodos.html#cb27-1" aria-hidden="true" tabindex="-1"></a>mod1</span></code></pre></div>
+<pre><code>## Holt-Winters exponential smoothing with trend and additive seasonal component.
+## 
+## Call:
+## HoltWinters(x = serie_tiempof, seasonal = &quot;additive&quot;)
+## 
+## Smoothing parameters:
+##  alpha: 0.1916229
+##  beta : 0.05183224
+##  gamma: 0.009457187
+## 
+## Coefficients:
+##           [,1]
+## a  11.37032342
+## b   0.05558299
+## s1  0.40185748
+## s2  0.41063827</code></pre>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="modelado-serie-suavización-exponencial-y-métodos.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adf.test</span>(<span class="fu">diff</span>(serie_tiempof))</span></code></pre></div>
 <pre><code>## Augmented Dickey-Fuller Test 
 ## alternative: stationary 
 ##  

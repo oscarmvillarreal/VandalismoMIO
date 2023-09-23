@@ -30,7 +30,7 @@
   
   
 <link rel="prev" href="modelado-serie-suavización-exponencial-y-métodos.html"/>
-
+<link rel="next" href="prophet.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -173,6 +173,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.4.3" data-path="método-box-jenkins-modelo-arima.html"><a href="método-box-jenkins-modelo-arima.html#homocedastidad"><i class="fa fa-check"></i><b>5.4.3</b> Homocedastidad</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="6" data-path="prophet.html"><a href="prophet.html"><i class="fa fa-check"></i><b>6</b> Prophet</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="prophet.html"><a href="prophet.html#modelo"><i class="fa fa-check"></i><b>6.1</b> Modelo</a></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -209,7 +213,7 @@ Para modelar y predecir de manera efectiva en tales casos, esta metodología es 
 <p style="text-align: justify;">
 Se calculó el Augmented Dickey-Fuller Test a la serie de tiempo con la suavización exponencial aplicando metodología Holter Winter, en la cual se evidenvia que el p-valor es tan bajo como 0.01, confirmamos entonces que la serie de tiempo ya se encuentra en un estado estacionario, resultado fundamental para aplicar con precisión modelos de series de tiempo como ARIMA.
 </p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="método-box-jenkins-modelo-arima.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adf.test</span>(<span class="fu">diff</span>(serie_tiempof))</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="método-box-jenkins-modelo-arima.html#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adf.test</span>(<span class="fu">diff</span>(serie_tiempof))</span></code></pre></div>
 <pre><code>## Augmented Dickey-Fuller Test 
 ## alternative: stationary 
 ##  
@@ -242,8 +246,8 @@ Se calculó el Augmented Dickey-Fuller Test a la serie de tiempo con la suavizac
 <p style="text-align: justify;">
 Como se mencionó anteriormente según la prueba DFT, la series es estacionaria y se procede a determinar los parámetros ARIMA
 </p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="método-box-jenkins-modelo-arima.html#cb31-1" aria-hidden="true" tabindex="-1"></a>modeloARIMA<span class="ot">&lt;-</span><span class="fu">auto.arima</span>(<span class="fu">diff</span>(serie_tiempof),  <span class="at">seasonal =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb31-2"><a href="método-box-jenkins-modelo-arima.html#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modeloARIMA) </span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="método-box-jenkins-modelo-arima.html#cb33-1" aria-hidden="true" tabindex="-1"></a>modeloARIMA<span class="ot">&lt;-</span><span class="fu">auto.arima</span>(<span class="fu">diff</span>(serie_tiempof),  <span class="at">seasonal =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb33-2"><a href="método-box-jenkins-modelo-arima.html#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modeloARIMA) </span></code></pre></div>
 <pre><code>## Series: diff(serie_tiempof) 
 ## ARIMA(0,0,2) with zero mean 
 ## 
@@ -261,43 +265,43 @@ Como se mencionó anteriormente según la prueba DFT, la series es estacionaria 
 <p style="text-align: justify;">
 Se procede a ajustar un modelo ARIMA a una serie de tiempo y se define el order del párametro c(p,d,q), Orden de Diferenciación (d) (ya es estacionaria, d=0), Orden de Autoregresión (p y q= valor seleccionado basándose en el último rezago significativo).
 </p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="método-box-jenkins-modelo-arima.html#cb33-1" aria-hidden="true" tabindex="-1"></a>modelo_ARIMA <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="fu">diff</span>(serie_tiempof), <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">2</span>))</span>
-<span id="cb33-2"><a href="método-box-jenkins-modelo-arima.html#cb33-2" aria-hidden="true" tabindex="-1"></a>n_predicciones <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb33-3"><a href="método-box-jenkins-modelo-arima.html#cb33-3" aria-hidden="true" tabindex="-1"></a>modpredicciones <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_ARIMA, <span class="at">n.ahead =</span> n_predicciones)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="método-box-jenkins-modelo-arima.html#cb35-1" aria-hidden="true" tabindex="-1"></a>modelo_ARIMA <span class="ot">&lt;-</span> <span class="fu">arima</span>(<span class="fu">diff</span>(serie_tiempof), <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">2</span>))</span>
+<span id="cb35-2"><a href="método-box-jenkins-modelo-arima.html#cb35-2" aria-hidden="true" tabindex="-1"></a>n_predicciones <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb35-3"><a href="método-box-jenkins-modelo-arima.html#cb35-3" aria-hidden="true" tabindex="-1"></a>modpredicciones <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_ARIMA, <span class="at">n.ahead =</span> n_predicciones)</span></code></pre></div>
 </div>
 <div id="predicción-modelo-arima" class="section level2 hasAnchor" number="5.2">
 <h2><span class="header-section-number">5.2</span> Predicción Modelo ARIMA<a href="método-box-jenkins-modelo-arima.html#predicción-modelo-arima" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p style="text-align: justify;">
 Luego de definido el modelo ARIMA para realizar predicciones, el siguiente paso es visualizar y evaluar la continuidad de las predicciones en relación con los datos reales, la visualización es una parte esencial del proceso de modelado de series de tiempo, ya que nos permite comprender si el modelo está capturando adecuadamente los patrones en los datos y si las predicciones son coherentes con el comportamiento histórico de la serie.
 </p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="método-box-jenkins-modelo-arima.html#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">diff</span>(serie_tiempof) , <span class="at">main =</span> <span class="st">&quot;Serie Temporal predicción&quot;</span>)</span>
-<span id="cb34-2"><a href="método-box-jenkins-modelo-arima.html#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(modpredicciones<span class="sc">$</span>pred, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="dv">4</span>)  <span class="co"># Línea de predicción</span></span>
-<span id="cb34-3"><a href="método-box-jenkins-modelo-arima.html#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="at">legend =</span> <span class="st">&quot;Predicción&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="dv">4</span>)</span></code></pre></div>
-<p><img src="Analisisvandalismo_files/figure-html/unnamed-chunk-26-1.png" width="960" /></p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="método-box-jenkins-modelo-arima.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">diff</span>(serie_tiempof) , <span class="at">main =</span> <span class="st">&quot;Serie Temporal predicción&quot;</span>)</span>
+<span id="cb36-2"><a href="método-box-jenkins-modelo-arima.html#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(modpredicciones<span class="sc">$</span>pred, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="dv">4</span>)  <span class="co"># Línea de predicción</span></span>
+<span id="cb36-3"><a href="método-box-jenkins-modelo-arima.html#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="at">legend =</span> <span class="st">&quot;Predicción&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="dv">4</span>)</span></code></pre></div>
+<p><img src="Analisisvandalismo_files/figure-html/unnamed-chunk-27-1.png" width="960" /></p>
 <p style="text-align: justify;">
 Realizamos un zoom a la predicción y comparamos con otro periodo para obervar similitud.
 </p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="método-box-jenkins-modelo-arima.html#cb35-1" aria-hidden="true" tabindex="-1"></a>inicio_zoom <span class="ot">&lt;-</span> <span class="dv">300</span></span>
-<span id="cb35-2"><a href="método-box-jenkins-modelo-arima.html#cb35-2" aria-hidden="true" tabindex="-1"></a>fin_zoom <span class="ot">&lt;-</span> <span class="dv">305</span></span>
-<span id="cb35-3"><a href="método-box-jenkins-modelo-arima.html#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">diff</span>(serie_tiempof), <span class="at">main =</span> <span class="st">&quot;Zoom Serie Temporal predicción&quot;</span>, <span class="at">xlim =</span> <span class="fu">c</span>(inicio_zoom, fin_zoom))</span>
-<span id="cb35-4"><a href="método-box-jenkins-modelo-arima.html#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(modpredicciones<span class="sc">$</span>pred[inicio_zoom<span class="sc">:</span>fin_zoom], <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="dv">4</span>)</span>
-<span id="cb35-5"><a href="método-box-jenkins-modelo-arima.html#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="at">legend =</span> <span class="st">&quot;Predicción&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="dv">4</span>)</span></code></pre></div>
-<p><img src="Analisisvandalismo_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="método-box-jenkins-modelo-arima.html#cb36-1" aria-hidden="true" tabindex="-1"></a>inicio_zoom <span class="ot">&lt;-</span> <span class="dv">292</span></span>
-<span id="cb36-2"><a href="método-box-jenkins-modelo-arima.html#cb36-2" aria-hidden="true" tabindex="-1"></a>fin_zoom <span class="ot">&lt;-</span> <span class="dv">299</span></span>
-<span id="cb36-3"><a href="método-box-jenkins-modelo-arima.html#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">diff</span>(serie_tiempof), <span class="at">main =</span> <span class="st">&quot;Zoom Serie Temporal sin predicción&quot;</span>, <span class="at">xlim =</span> <span class="fu">c</span>(inicio_zoom, fin_zoom))</span>
-<span id="cb36-4"><a href="método-box-jenkins-modelo-arima.html#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(modpredicciones<span class="sc">$</span>pred[inicio_zoom<span class="sc">:</span>fin_zoom], <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="dv">4</span>)</span>
-<span id="cb36-5"><a href="método-box-jenkins-modelo-arima.html#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="at">legend =</span> <span class="st">&quot;Predicción&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="dv">4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="método-box-jenkins-modelo-arima.html#cb37-1" aria-hidden="true" tabindex="-1"></a>inicio_zoom <span class="ot">&lt;-</span> <span class="dv">300</span></span>
+<span id="cb37-2"><a href="método-box-jenkins-modelo-arima.html#cb37-2" aria-hidden="true" tabindex="-1"></a>fin_zoom <span class="ot">&lt;-</span> <span class="dv">350</span></span>
+<span id="cb37-3"><a href="método-box-jenkins-modelo-arima.html#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">diff</span>(serie_tiempof), <span class="at">main =</span> <span class="st">&quot;Zoom Serie Temporal predicción&quot;</span>, <span class="at">xlim =</span> <span class="fu">c</span>(inicio_zoom, fin_zoom))</span>
+<span id="cb37-4"><a href="método-box-jenkins-modelo-arima.html#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(modpredicciones<span class="sc">$</span>pred[inicio_zoom<span class="sc">:</span>fin_zoom], <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="dv">4</span>)</span>
+<span id="cb37-5"><a href="método-box-jenkins-modelo-arima.html#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="at">legend =</span> <span class="st">&quot;Predicción&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="dv">4</span>)</span></code></pre></div>
 <p><img src="Analisisvandalismo_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="método-box-jenkins-modelo-arima.html#cb38-1" aria-hidden="true" tabindex="-1"></a>inicio_zoom <span class="ot">&lt;-</span> <span class="dv">292</span></span>
+<span id="cb38-2"><a href="método-box-jenkins-modelo-arima.html#cb38-2" aria-hidden="true" tabindex="-1"></a>fin_zoom <span class="ot">&lt;-</span> <span class="dv">299</span></span>
+<span id="cb38-3"><a href="método-box-jenkins-modelo-arima.html#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">diff</span>(serie_tiempof), <span class="at">main =</span> <span class="st">&quot;Zoom Serie Temporal sin predicción&quot;</span>, <span class="at">xlim =</span> <span class="fu">c</span>(inicio_zoom, fin_zoom))</span>
+<span id="cb38-4"><a href="método-box-jenkins-modelo-arima.html#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(modpredicciones<span class="sc">$</span>pred[inicio_zoom<span class="sc">:</span>fin_zoom], <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="dv">4</span>)</span>
+<span id="cb38-5"><a href="método-box-jenkins-modelo-arima.html#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="at">legend =</span> <span class="st">&quot;Predicción&quot;</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="dv">4</span>)</span></code></pre></div>
+<p><img src="Analisisvandalismo_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
 <p style="text-align: justify;">
-Observamos similitud entre el rango de los datos y el pronóstico.
+Observamos que la serie de tiempo no se ajusta bien a un modelo autorregresivo. la efectividad de un modelo autorregresivo depende en gran medida de la calidad de los datos y de la elección de los parámetros del modelo. Si la serie de tiempo tiene una estructura compleja o no es adecuada para un modelo autorregresivo, los pronósticos pueden ser imprecisos o incluso constantes si el modelo no puede capturar adecuadamente los patrones temporales.
 </p>
 </div>
 <div id="comparativo-serie-de-tiempo-suavizada---modelo-arima" class="section level2 hasAnchor" number="5.3">
 <h2><span class="header-section-number">5.3</span> Comparativo Serie de Tiempo suavizada - Modelo ARIMA<a href="método-box-jenkins-modelo-arima.html#comparativo-serie-de-tiempo-suavizada---modelo-arima" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="método-box-jenkins-modelo-arima.html#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">diff</span>(serie_tiempof), <span class="at">main =</span> <span class="st">&quot;Serie Tiempo suavizada Winter Holters vs. Modelo ARIMA&quot;</span>)</span>
-<span id="cb37-2"><a href="método-box-jenkins-modelo-arima.html#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">fitted</span>(modelo_ARIMA), <span class="at">col =</span> <span class="st">&quot;green&quot;</span>,  <span class="at">lwd =</span> <span class="fl">0.5</span>)</span></code></pre></div>
-<img src="Analisisvandalismo_files/figure-html/unnamed-chunk-29-1.png" width="960" />
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="método-box-jenkins-modelo-arima.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">diff</span>(serie_tiempof), <span class="at">main =</span> <span class="st">&quot;Serie Tiempo suavizada Winter Holters vs. Modelo ARIMA&quot;</span>)</span>
+<span id="cb39-2"><a href="método-box-jenkins-modelo-arima.html#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">fitted</span>(modelo_ARIMA), <span class="at">col =</span> <span class="st">&quot;green&quot;</span>,  <span class="at">lwd =</span> <span class="fl">0.5</span>)</span></code></pre></div>
+<img src="Analisisvandalismo_files/figure-html/unnamed-chunk-30-1.png" width="960" />
 <p style="text-align: justify;">
 Se enfatiza que la serie es estacionaria y se menciona que el modelo parece adaptarse adecuadamente a la serie sin tendencia evidente, mientras se reconoce que aún no se han definido medidas de desempeño específicas.
 </p>
@@ -320,12 +324,12 @@ Procedemos a determinar los residuales del modelo ARIMA y determinar la hipotesi
 </p>
 <div id="normalidad-arima" class="section level3 hasAnchor" number="5.4.1">
 <h3><span class="header-section-number">5.4.1</span> Normalidad ARIMA<a href="método-box-jenkins-modelo-arima.html#normalidad-arima" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="método-box-jenkins-modelo-arima.html#cb38-1" aria-hidden="true" tabindex="-1"></a>residuales<span class="ot">&lt;-</span>modelo_ARIMA<span class="sc">$</span>residuals</span>
-<span id="cb38-2"><a href="método-box-jenkins-modelo-arima.html#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(residuales)</span>
-<span id="cb38-3"><a href="método-box-jenkins-modelo-arima.html#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(residuales)</span></code></pre></div>
-<p><img src="Analisisvandalismo_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="método-box-jenkins-modelo-arima.html#cb39-1" aria-hidden="true" tabindex="-1"></a>resultado <span class="ot">&lt;-</span> <span class="fu">ks.test</span>(residuales, <span class="st">&quot;pnorm&quot;</span>, <span class="fu">mean</span>(residuales), <span class="fu">sd</span>(residuales))</span>
-<span id="cb39-2"><a href="método-box-jenkins-modelo-arima.html#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(resultado)</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="método-box-jenkins-modelo-arima.html#cb40-1" aria-hidden="true" tabindex="-1"></a>residuales<span class="ot">&lt;-</span>modelo_ARIMA<span class="sc">$</span>residuals</span>
+<span id="cb40-2"><a href="método-box-jenkins-modelo-arima.html#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(residuales)</span>
+<span id="cb40-3"><a href="método-box-jenkins-modelo-arima.html#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(residuales)</span></code></pre></div>
+<p><img src="Analisisvandalismo_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="método-box-jenkins-modelo-arima.html#cb41-1" aria-hidden="true" tabindex="-1"></a>resultado <span class="ot">&lt;-</span> <span class="fu">ks.test</span>(residuales, <span class="st">&quot;pnorm&quot;</span>, <span class="fu">mean</span>(residuales), <span class="fu">sd</span>(residuales))</span>
+<span id="cb41-2"><a href="método-box-jenkins-modelo-arima.html#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(resultado)</span></code></pre></div>
 <pre><code>## 
 ##  Asymptotic one-sample Kolmogorov-Smirnov test
 ## 
@@ -343,7 +347,7 @@ Calcular y verificar la independencia de los datos es esencial al trabajar con m
 </p>
 <p>HO: Los residuales son independientes</p>
 <p>H1: Los residuales son dependientes</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="método-box-jenkins-modelo-arima.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(residuales)</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="método-box-jenkins-modelo-arima.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(residuales)</span></code></pre></div>
 <pre><code>## 
 ##  Shapiro-Wilk normality test
 ## 
@@ -358,13 +362,13 @@ Procedemos a definir el tercer criterio de Homocedasticidad
 </div>
 <div id="homocedastidad" class="section level3 hasAnchor" number="5.4.3">
 <h3><span class="header-section-number">5.4.3</span> Homocedastidad<a href="método-box-jenkins-modelo-arima.html#homocedastidad" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="método-box-jenkins-modelo-arima.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtén los residuales del modelo ARIMA (reemplaza &#39;modelo_arima&#39; con tu propio modelo)</span></span>
-<span id="cb43-2"><a href="método-box-jenkins-modelo-arima.html#cb43-2" aria-hidden="true" tabindex="-1"></a>residuales <span class="ot">&lt;-</span> <span class="fu">residuals</span>(modelo_ARIMA)</span>
-<span id="cb43-3"><a href="método-box-jenkins-modelo-arima.html#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-4"><a href="método-box-jenkins-modelo-arima.html#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Crea un gráfico de dispersión de residuales vs. tiempo</span></span>
-<span id="cb43-5"><a href="método-box-jenkins-modelo-arima.html#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(residuales, <span class="at">type =</span> <span class="st">&#39;o&#39;</span>, <span class="at">ylab =</span> <span class="st">&#39;Residuales&#39;</span>, <span class="at">xlab =</span> <span class="st">&#39;Tiempo&#39;</span>, <span class="at">main =</span> <span class="st">&#39;Gráfico de Residuales&#39;</span>)</span>
-<span id="cb43-6"><a href="método-box-jenkins-modelo-arima.html#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">&#39;red&#39;</span>, <span class="at">lty =</span> <span class="dv">2</span>)  <span class="co"># Línea horizontal en y = 0</span></span></code></pre></div>
-<p><img src="Analisisvandalismo_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="método-box-jenkins-modelo-arima.html#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtén los residuales del modelo ARIMA (reemplaza &#39;modelo_arima&#39; con tu propio modelo)</span></span>
+<span id="cb45-2"><a href="método-box-jenkins-modelo-arima.html#cb45-2" aria-hidden="true" tabindex="-1"></a>residuales <span class="ot">&lt;-</span> <span class="fu">residuals</span>(modelo_ARIMA)</span>
+<span id="cb45-3"><a href="método-box-jenkins-modelo-arima.html#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-4"><a href="método-box-jenkins-modelo-arima.html#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Crea un gráfico de dispersión de residuales vs. tiempo</span></span>
+<span id="cb45-5"><a href="método-box-jenkins-modelo-arima.html#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(residuales, <span class="at">type =</span> <span class="st">&#39;o&#39;</span>, <span class="at">ylab =</span> <span class="st">&#39;Residuales&#39;</span>, <span class="at">xlab =</span> <span class="st">&#39;Tiempo&#39;</span>, <span class="at">main =</span> <span class="st">&#39;Gráfico de Residuales&#39;</span>)</span>
+<span id="cb45-6"><a href="método-box-jenkins-modelo-arima.html#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">&#39;red&#39;</span>, <span class="at">lty =</span> <span class="dv">2</span>)  <span class="co"># Línea horizontal en y = 0</span></span></code></pre></div>
+<p><img src="Analisisvandalismo_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
 <p style="text-align: justify;">
 Mediante el método de gráfico de dispersión de los residuales al parecer existe Homocedasticidad, puesto que los puntos están dispersos aleatoriamente alrededor de una línea horizontal en el gráfico.
 </p>
@@ -376,8 +380,8 @@ Mediante el método de gráfico de dispersión de los residuales al parecer exis
           </div>
         </div>
       </div>
-<a href="modelado-serie-suavización-exponencial-y-métodos.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="modelado-serie-suavización-exponencial-y-métodos.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="prophet.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

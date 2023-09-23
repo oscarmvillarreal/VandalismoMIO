@@ -17,7 +17,7 @@ description: "En este libro, exploraremos en detalle la base de datos que recopi
 ---
 title: "Análisis de Vandalismos a la Flota del SITM MIO en Cali: Importancia y Justificación"
 author: "Karol Mejía - Oscar Morán"
-date: "21/08/2023"
+date: "21/09/2023"
 output: html_document
 ---
 
@@ -78,7 +78,6 @@ library(lmtest)
 
 ```{r, warning=FALSE}
 vandalismo <- read_excel("vandalismo.xlsx")
-
 ```
 
 ## Aproximación en promedio Móvil
@@ -189,10 +188,10 @@ ggplot(data_con_rezagos, aes(x = Fecha)) +
 ```{r, fig.width=10, fig.height=5, warning=FALSE}
 # Graficar los resultados
 ggplot() +
-  geom_line(data = datos_sumados, aes(x = Fecha, y = Calificación), color = "blue", linetype = "solid") +
-  geom_line(data = data_con_promedio, aes(x = Fecha, y = promedio), color = "red", linetype = "dashed") +
   geom_line(data = data_con_rezagos, aes(x = Fecha, y = Calificación), color = "green", linetype = "dotted") +
   geom_line(data = data_con_rezagos, aes(x = Fecha, y = Calificación_lag7), color = "orange", linetype = "dotted") +
+  geom_line(data = datos_sumados, aes(x = Fecha, y = Calificación), color = "blue", linetype = "solid") +
+  geom_line(data = data_con_promedio, aes(x = Fecha, y = promedio), color = "red", linetype = "dashed") +
   labs(title = "Análisis de Variable en el Tiempo", x = "Fecha", y = "Calificación") +
   theme_minimal()
 ```
@@ -301,6 +300,12 @@ mod1 <- HoltWinters(serie_tiempof, seasonal = "additive")
 plot(mod1)
 ```
 ```{r}
+mod1
+```
+
+
+
+```{r}
 adf.test(diff(serie_tiempof))
 ```
 
@@ -358,7 +363,7 @@ legend("topright", legend = "Predicción", col = "red", lty = 4)
 
 ```{r}
 inicio_zoom <- 300
-fin_zoom <- 305
+fin_zoom <- 350
 plot(diff(serie_tiempof), main = "Zoom Serie Temporal predicción", xlim = c(inicio_zoom, fin_zoom))
 lines(modpredicciones$pred[inicio_zoom:fin_zoom], col = "red", lty = 4)
 legend("topright", legend = "Predicción", col = "red", lty = 4)
@@ -371,7 +376,7 @@ lines(modpredicciones$pred[inicio_zoom:fin_zoom], col = "red", lty = 4)
 legend("topright", legend = "Predicción", col = "red", lty = 4)
 ```
 
-<p style="text-align: justify;">  Observamos similitud entre el rango de los datos y el pronóstico.</p>
+<p style="text-align: justify;">  Observamos que la serie de tiempo no se ajusta bien a un modelo autorregresivo.  la efectividad de un modelo autorregresivo depende en gran medida de la calidad de los datos y de la elección de los parámetros del modelo. Si la serie de tiempo tiene una estructura compleja o no es adecuada para un modelo autorregresivo, los pronósticos pueden ser imprecisos o incluso constantes si el modelo no puede capturar adecuadamente los patrones temporales.</p>
 
 
 ## Comparativo Serie de Tiempo suavizada - Modelo ARIMA
@@ -443,3 +448,64 @@ abline(h = 0, col = 'red', lty = 2)  # Línea horizontal en y = 0
 ```
 
 <p style="text-align: justify;"> Mediante el método de gráfico de dispersión de los residuales al parecer existe Homocedasticidad, puesto que los puntos están dispersos aleatoriamente alrededor de una línea horizontal en el gráfico.</p>
+
+
+# Prophet
+
+<p style="text-align: justify;"> Prophet es un poderoso algoritmo de predicción desarrollado por Facebook que se utiliza ampliamente en el análisis de series de tiempo, su enfoque se basa en descomponer las series temporales en tres componentes principales: tendencia, estacionalidad y días festivos. Esto facilita la modelización de patrones complejos y la generación de pronósticos precisos. Prophet es especialmente útil cuando se trabaja con datos de series de tiempo que pueden tener tendencias no lineales y efectos de estacionalidad irregulares. Además, con Prophet, es posible realizar pronósticos precisos y tomar decisiones informadas.</p>
+
+## Modelo
+
+El modelo subyacente es el propuesto por Harvey & Peters (1990):
+
+y(t)=g(t)+s(t)+h(t)+ϵt
+
+df: dataframe
+growth: tipo de tendencia: lineal o logistica
+yearly.seasonality: hay estacionalidad anual?
+yearly.seasonality: hay estacionalidad diaria?
+holidays: dataframe con fechas de vacaciones/eventos especiales
+
+<p style="text-align: justify;"> A continuación, cargaremos las siguientes librerías necesarias para utilizar el algoritmo Prophet:</p>
+
+```{r, message=FALSE}
+library(prophet) 
+library(Rcpp)
+library(rlang)
+```
+
+<p style="text-align: justify;"> Generamos la data del promedio de suavización exponencial</p>
+
+```{r}
+head(data_con_promedio, n = 20)
+```
+
+<p style="text-align: justify;"> Se crea un nuevo DataFrame llamado new_dataprom seleccionando solo las columnas 'Fecha' y 'promedio' del DataFrame original data_con_promedio.  Se renombran las columnas del DataFrame new_dataprom. La columna 'Fecha' se renombra como 'ds' y la columna 'promedio' se renombra como 'y'. Esto sugiere que los datos se están preparando para ser utilizados con el algoritmo Prophet de predicción de series de tiempo de Facebook, ya que Prophet espera que las columnas que contienen la fecha y el valor objetivo se llamen 'ds' y 'y', respectivamente. Este código facilita la preparación de datos para su uso con Prophet, una herramienta de pronóstico de series de tiempo, asegurando que los datos estén en el formato adecuado antes de aplicar el algoritmo. </p>
+
+```{r}
+new_dataprom <- data_con_promedio[c('Fecha', 'promedio')]
+colnames(new_dataprom) <- c('ds', 'y')
+# ------------
+# df <- data.frame(datos_sumados)
+# colnames(df) <- c('ds', 'y')
+datos_sumados_a <- new_dataprom
+head(datos_sumados_a, n=20)
+```
+
+<p style="text-align: justify;"> Se procede a realizar el siguiente modelo configurado para tener una estacionalidad anual con 13 términos (para adaptarse a patrones anuales), mientras que se deshabilita la estacionalidad semanal y diaria; Además, se establece el modo de estacionalidad en 'additive', lo que significa que el modelo asume que las estacionalidades se suman de manera lineal a la tendencia. Por otro lado, se generan 2 años (2*365 días) de fechas futuras con una frecuencia diaria ('day') en función de la información proporcionada por el modelo m.</p>
+
+<p style="text-align: justify;"> Por último, se genera un gráfico que muestra tanto los datos originales como las predicciones del modelo m. Esto ayuda a visualizar cómo se comparan las predicciones del modelo con los datos históricos. La función theme_bw() se utiliza para aplicar un tema de gráfico en blanco y negro.</p>
+
+```{r, fig.width=20}
+m <- prophet(datos_sumados_a, yearly.seasonality = 13, weekly.seasonality = FALSE, daily.seasonality = FALSE, seasonality.mode = 'additive')
+future <- make_future_dataframe(m, periods = 2*365, freq = 'day')
+forecast <- predict(m, future)
+plot(m, forecast)  + theme_bw()
+```
+
+```{r, fig.width=20}
+prophet_plot_components(m, fcst=predict(m, datos_sumados_a)) + theme_bw()
+```
+
+<p style="text-align: justify;"> Se evidencia una coherencia notoria en el pronóstico, ya que la incidencia de vandalismo en el sistema de transporte MIO muestra una clara relación con la temporada del año. Durante los meses de junio a agosto, así como en diciembre, se observa una disminución pronunciada en las proyecciones de vandalismo. Al utilizar Prophet, hemos podido obtener una visión más clara de cómo se comportarán los datos en el futuro, lo que puede ser muy beneficioso para la toma de decisiones y la planificación estratégica, la capacidad de Prophet para generar intervalos de confianza también brinda una idea de la incertidumbre asociada con las predicciones, lo que permite una toma de decisiones más informada.</p>
+

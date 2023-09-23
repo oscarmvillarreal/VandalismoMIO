@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>3 Preprocesamiento y visualización | Análisis de Vandalismos a la Flota del SITM MIO en Cali: Importancia y Justificación</title>
+  <title>6 Prophet | Análisis de Vandalismos a la Flota del SITM MIO en Cali: Importancia y Justificación</title>
   <meta name="description" content="En este libro, exploraremos en detalle la base de datos que recopila información sobre los incidentes de vandalismo que han afectado al Sistema Integrado de Transporte Masivo (SITM) conocido como MIO. El MIO es un sistema de transporte público que opera en la ciudad de Cali, Colombia, y ha sido objeto de diversos actos de vandalismo a lo largo del tiempo. The output format for this example is bookdown::gitbook." />
   <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="3 Preprocesamiento y visualización | Análisis de Vandalismos a la Flota del SITM MIO en Cali: Importancia y Justificación" />
+  <meta property="og:title" content="6 Prophet | Análisis de Vandalismos a la Flota del SITM MIO en Cali: Importancia y Justificación" />
   <meta property="og:type" content="book" />
   
   <meta property="og:description" content="En este libro, exploraremos en detalle la base de datos que recopila información sobre los incidentes de vandalismo que han afectado al Sistema Integrado de Transporte Masivo (SITM) conocido como MIO. El MIO es un sistema de transporte público que opera en la ciudad de Cali, Colombia, y ha sido objeto de diversos actos de vandalismo a lo largo del tiempo. The output format for this example is bookdown::gitbook." />
   <meta name="github-repo" content="rstudio/bookdown-demo" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="3 Preprocesamiento y visualización | Análisis de Vandalismos a la Flota del SITM MIO en Cali: Importancia y Justificación" />
+  <meta name="twitter:title" content="6 Prophet | Análisis de Vandalismos a la Flota del SITM MIO en Cali: Importancia y Justificación" />
   
   <meta name="twitter:description" content="En este libro, exploraremos en detalle la base de datos que recopila información sobre los incidentes de vandalismo que han afectado al Sistema Integrado de Transporte Masivo (SITM) conocido como MIO. El MIO es un sistema de transporte público que opera en la ciudad de Cali, Colombia, y ha sido objeto de diversos actos de vandalismo a lo largo del tiempo. The output format for this example is bookdown::gitbook." />
   
@@ -29,8 +29,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="estructura-de-los-datos-en-series-de-tiempo.html"/>
-<link rel="next" href="modelado-serie-suavización-exponencial-y-métodos.html"/>
+<link rel="prev" href="método-box-jenkins-modelo-arima.html"/>
+
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -197,85 +197,98 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="preprocesamiento-y-visualización" class="section level1 hasAnchor" number="3">
-<h1><span class="header-section-number">3</span> Preprocesamiento y visualización<a href="preprocesamiento-y-visualización.html#preprocesamiento-y-visualización" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="prophet" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">6</span> Prophet<a href="prophet.html#prophet" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p style="text-align: justify;">
-A continuación se realizará un proceso determinante que nos permitirá definir y explicar los componentes fundamentales que componen nuestra serie a lo largo del tiempo, al separar la serie en sus partes constituyentes, como la tendencia, la estacionalidad y el componente residual, se comprende mejor los patrones y las variaciones presentes.
+Prophet es un poderoso algoritmo de predicción desarrollado por Facebook que se utiliza ampliamente en el análisis de series de tiempo, su enfoque se basa en descomponer las series temporales en tres componentes principales: tendencia, estacionalidad y días festivos. Esto facilita la modelización de patrones complejos y la generación de pronósticos precisos. Prophet es especialmente útil cuando se trabaja con datos de series de tiempo que pueden tener tendencias no lineales y efectos de estacionalidad irregulares. Además, con Prophet, es posible realizar pronósticos precisos y tomar decisiones informadas.
 </p>
-<div id="descomposición-de-la-serie-de-tiempo" class="section level2 hasAnchor" number="3.1">
-<h2><span class="header-section-number">3.1</span> Descomposición de la serie de tiempo<a href="preprocesamiento-y-visualización.html#descomposición-de-la-serie-de-tiempo" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="preprocesamiento-y-visualización.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Realizar descomposición de la serie de tiempo</span></span>
-<span id="cb14-2"><a href="preprocesamiento-y-visualización.html#cb14-2" aria-hidden="true" tabindex="-1"></a>serie_de_tiempo <span class="ot">&lt;-</span> <span class="fu">ts</span>(datos_sumados<span class="sc">$</span>Calificación, <span class="at">frequency =</span> <span class="dv">240</span>)</span>
-<span id="cb14-3"><a href="preprocesamiento-y-visualización.html#cb14-3" aria-hidden="true" tabindex="-1"></a>descomposicion <span class="ot">&lt;-</span> <span class="fu">decompose</span>(serie_de_tiempo)</span></code></pre></div>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="preprocesamiento-y-visualización.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfico de la descomposición</span></span>
-<span id="cb15-2"><a href="preprocesamiento-y-visualización.html#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(descomposicion)</span></code></pre></div>
-<p><img src="Analisisvandalismo_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<div id="modelo" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> Modelo<a href="prophet.html#modelo" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>El modelo subyacente es el propuesto por Harvey &amp; Peters (1990):</p>
+<p>y(t)=g(t)+s(t)+h(t)+ϵt</p>
+<p>df: dataframe
+growth: tipo de tendencia: lineal o logistica
+yearly.seasonality: hay estacionalidad anual?
+yearly.seasonality: hay estacionalidad diaria?
+holidays: dataframe con fechas de vacaciones/eventos especiales</p>
 <p style="text-align: justify;">
-Se procede a realizar una verificación muy necesaria para el análisis de nuestra serie de tiempo: la estacionalidadm usaremos la biblioteca “tseries” y su prueba de Dickey-Fuller aumentada (ADF) para determinar si nuestra serie de tiempo cumple con este requisito.
+A continuación, cargaremos las siguientes librerías necesarias para utilizar el algoritmo Prophet:
 </p>
-</div>
-<div id="verificación-estacionalidad" class="section level2 hasAnchor" number="3.2">
-<h2><span class="header-section-number">3.2</span> Verificación Estacionalidad<a href="preprocesamiento-y-visualización.html#verificación-estacionalidad" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="preprocesamiento-y-visualización.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Verificar estacionalidad</span></span>
-<span id="cb16-2"><a href="preprocesamiento-y-visualización.html#cb16-2" aria-hidden="true" tabindex="-1"></a>adf_test <span class="ot">&lt;-</span> <span class="fu">adf.test</span>(datos_sumados<span class="sc">$</span>Calificación)</span></code></pre></div>
-<pre><code>## Augmented Dickey-Fuller Test 
-## alternative: stationary 
-##  
-## Type 1: no drift no trend 
-##      lag   ADF p.value
-## [1,]   0 -7.22  0.0100
-## [2,]   1 -4.40  0.0100
-## [3,]   2 -3.04  0.0100
-## [4,]   3 -2.46  0.0149
-## [5,]   4 -2.00  0.0459
-## [6,]   5 -1.48  0.1497
-## Type 2: with drift no trend 
-##      lag    ADF p.value
-## [1,]   0 -19.83    0.01
-## [2,]   1 -13.88    0.01
-## [3,]   2 -10.66    0.01
-## [4,]   3  -9.35    0.01
-## [5,]   4  -8.12    0.01
-## [6,]   5  -6.62    0.01
-## Type 3: with drift and trend 
-##      lag    ADF p.value
-## [1,]   0 -20.89    0.01
-## [2,]   1 -14.84    0.01
-## [3,]   2 -11.50    0.01
-## [4,]   3 -10.20    0.01
-## [5,]   4  -8.94    0.01
-## [6,]   5  -7.33    0.01
-## ---- 
-## Note: in fact, p.value = 0.01 means p.value &lt;= 0.01</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="preprocesamiento-y-visualización.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(adf_test)</span></code></pre></div>
-<pre><code>## $type1
-##      lag       ADF    p.value
-## [1,]   0 -7.220949 0.01000000
-## [2,]   1 -4.402333 0.01000000
-## [3,]   2 -3.044808 0.01000000
-## [4,]   3 -2.464902 0.01493277
-## [5,]   4 -1.995575 0.04593085
-## [6,]   5 -1.480760 0.14972914
-## 
-## $type2
-##      lag        ADF p.value
-## [1,]   0 -19.834365    0.01
-## [2,]   1 -13.884085    0.01
-## [3,]   2 -10.657969    0.01
-## [4,]   3  -9.348404    0.01
-## [5,]   4  -8.117266    0.01
-## [6,]   5  -6.621827    0.01
-## 
-## $type3
-##      lag        ADF p.value
-## [1,]   0 -20.886341    0.01
-## [2,]   1 -14.836634    0.01
-## [3,]   2 -11.501365    0.01
-## [4,]   3 -10.195031    0.01
-## [5,]   4  -8.938601    0.01
-## [6,]   5  -7.328709    0.01</code></pre>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="prophet.html#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(prophet) </span>
+<span id="cb46-2"><a href="prophet.html#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Rcpp)</span>
+<span id="cb46-3"><a href="prophet.html#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rlang)</span></code></pre></div>
 <p style="text-align: justify;">
-El valor p (0.01 en este caso) es menor que el nivel comúnmente utilizado de 0.05, lo que indica que se rechaza la hipótesis nula. La hipótesis nula en este caso es que la serie de tiempo tiene una raíz unitaria y no es “estacionaria”, dado que el valor p es pequeño, se puede concluir que hay suficiente evidencia estadística para decir que la serie de tiempo es estacionaria en función de los resultados de la prueba ADF, gracias a la estacionariedad de la serie, evitaremos la necesidad de realizar diferenciación en este caso particular.
+Generamos la data del promedio de suavización exponencial
+</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="prophet.html#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(data_con_promedio, <span class="at">n =</span> <span class="dv">20</span>)</span></code></pre></div>
+<pre><code>##         Fecha Calificación promedio
+## 1  2021-01-01            8       NA
+## 2  2021-01-02            1       NA
+## 3  2021-01-03            1       NA
+## 4  2021-01-04            4 3.857143
+## 5  2021-01-05            5 3.714286
+## 6  2021-01-06            4 4.285714
+## 7  2021-01-07            4 6.428571
+## 8  2021-01-08            7 6.285714
+## 9  2021-01-09            5 6.714286
+## 10 2021-01-10           16 7.428571
+## 11 2021-01-11            3 8.142857
+## 12 2021-01-12            8 8.000000
+## 13 2021-01-13            9 8.000000
+## 14 2021-01-14            9 6.285714
+## 15 2021-01-15            6 7.142857
+## 16 2021-01-16            5 7.142857
+## 17 2021-01-17            4 7.142857
+## 18 2021-01-18            9 7.714286
+## 19 2021-01-19            8 7.142857
+## 20 2021-01-20            9 7.285714</code></pre>
+<p style="text-align: justify;">
+Se crea un nuevo DataFrame llamado new_dataprom seleccionando solo las columnas ‘Fecha’ y ‘promedio’ del DataFrame original data_con_promedio. Se renombran las columnas del DataFrame new_dataprom. La columna ‘Fecha’ se renombra como ‘ds’ y la columna ‘promedio’ se renombra como ‘y’. Esto sugiere que los datos se están preparando para ser utilizados con el algoritmo Prophet de predicción de series de tiempo de Facebook, ya que Prophet espera que las columnas que contienen la fecha y el valor objetivo se llamen ‘ds’ y ‘y’, respectivamente. Este código facilita la preparación de datos para su uso con Prophet, una herramienta de pronóstico de series de tiempo, asegurando que los datos estén en el formato adecuado antes de aplicar el algoritmo.
+</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="prophet.html#cb49-1" aria-hidden="true" tabindex="-1"></a>new_dataprom <span class="ot">&lt;-</span> data_con_promedio[<span class="fu">c</span>(<span class="st">&#39;Fecha&#39;</span>, <span class="st">&#39;promedio&#39;</span>)]</span>
+<span id="cb49-2"><a href="prophet.html#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(new_dataprom) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;ds&#39;</span>, <span class="st">&#39;y&#39;</span>)</span>
+<span id="cb49-3"><a href="prophet.html#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ------------</span></span>
+<span id="cb49-4"><a href="prophet.html#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="co"># df &lt;- data.frame(datos_sumados)</span></span>
+<span id="cb49-5"><a href="prophet.html#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="co"># colnames(df) &lt;- c(&#39;ds&#39;, &#39;y&#39;)</span></span>
+<span id="cb49-6"><a href="prophet.html#cb49-6" aria-hidden="true" tabindex="-1"></a>datos_sumados_a <span class="ot">&lt;-</span> new_dataprom</span>
+<span id="cb49-7"><a href="prophet.html#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(datos_sumados_a, <span class="at">n=</span><span class="dv">20</span>)</span></code></pre></div>
+<pre><code>##            ds        y
+## 1  2021-01-01       NA
+## 2  2021-01-02       NA
+## 3  2021-01-03       NA
+## 4  2021-01-04 3.857143
+## 5  2021-01-05 3.714286
+## 6  2021-01-06 4.285714
+## 7  2021-01-07 6.428571
+## 8  2021-01-08 6.285714
+## 9  2021-01-09 6.714286
+## 10 2021-01-10 7.428571
+## 11 2021-01-11 8.142857
+## 12 2021-01-12 8.000000
+## 13 2021-01-13 8.000000
+## 14 2021-01-14 6.285714
+## 15 2021-01-15 7.142857
+## 16 2021-01-16 7.142857
+## 17 2021-01-17 7.142857
+## 18 2021-01-18 7.714286
+## 19 2021-01-19 7.142857
+## 20 2021-01-20 7.285714</code></pre>
+<p style="text-align: justify;">
+Se procede a realizar el siguiente modelo configurado para tener una estacionalidad anual con 13 términos (para adaptarse a patrones anuales), mientras que se deshabilita la estacionalidad semanal y diaria; Además, se establece el modo de estacionalidad en ‘additive’, lo que significa que el modelo asume que las estacionalidades se suman de manera lineal a la tendencia. Por otro lado, se generan 2 años (2*365 días) de fechas futuras con una frecuencia diaria (‘day’) en función de la información proporcionada por el modelo m.
+</p>
+<p style="text-align: justify;">
+Por último, se genera un gráfico que muestra tanto los datos originales como las predicciones del modelo m. Esto ayuda a visualizar cómo se comparan las predicciones del modelo con los datos históricos. La función theme_bw() se utiliza para aplicar un tema de gráfico en blanco y negro.
+</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="prophet.html#cb51-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">prophet</span>(datos_sumados_a, <span class="at">yearly.seasonality =</span> <span class="dv">13</span>, <span class="at">weekly.seasonality =</span> <span class="cn">FALSE</span>, <span class="at">daily.seasonality =</span> <span class="cn">FALSE</span>, <span class="at">seasonality.mode =</span> <span class="st">&#39;additive&#39;</span>)</span>
+<span id="cb51-2"><a href="prophet.html#cb51-2" aria-hidden="true" tabindex="-1"></a>future <span class="ot">&lt;-</span> <span class="fu">make_future_dataframe</span>(m, <span class="at">periods =</span> <span class="dv">2</span><span class="sc">*</span><span class="dv">365</span>, <span class="at">freq =</span> <span class="st">&#39;day&#39;</span>)</span>
+<span id="cb51-3"><a href="prophet.html#cb51-3" aria-hidden="true" tabindex="-1"></a>forecast <span class="ot">&lt;-</span> <span class="fu">predict</span>(m, future)</span>
+<span id="cb51-4"><a href="prophet.html#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(m, forecast)  <span class="sc">+</span> <span class="fu">theme_bw</span>()</span></code></pre></div>
+<p><img src="Analisisvandalismo_files/figure-html/unnamed-chunk-38-1.png" width="1920" /></p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="prophet.html#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prophet_plot_components</span>(m, <span class="at">fcst=</span><span class="fu">predict</span>(m, datos_sumados_a)) <span class="sc">+</span> <span class="fu">theme_bw</span>()</span></code></pre></div>
+<p><img src="Analisisvandalismo_files/figure-html/unnamed-chunk-39-1.png" width="1920" /></p>
+<pre><code>## NULL</code></pre>
+<p style="text-align: justify;">
+Se evidencia una coherencia notoria en el pronóstico, ya que la incidencia de vandalismo en el sistema de transporte MIO muestra una clara relación con la temporada del año. Durante los meses de junio a agosto, así como en diciembre, se observa una disminución pronunciada en las proyecciones de vandalismo. Al utilizar Prophet, hemos podido obtener una visión más clara de cómo se comportarán los datos en el futuro, lo que puede ser muy beneficioso para la toma de decisiones y la planificación estratégica, la capacidad de Prophet para generar intervalos de confianza también brinda una idea de la incertidumbre asociada con las predicciones, lo que permite una toma de decisiones más informada.
 </p>
 </div>
 </div>
@@ -284,8 +297,8 @@ El valor p (0.01 en este caso) es menor que el nivel comúnmente utilizado de 0.
           </div>
         </div>
       </div>
-<a href="estructura-de-los-datos-en-series-de-tiempo.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="modelado-serie-suavización-exponencial-y-métodos.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="método-box-jenkins-modelo-arima.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
